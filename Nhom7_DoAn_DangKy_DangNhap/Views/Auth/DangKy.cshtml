@@ -1,0 +1,38 @@
+﻿@model Nhom7_DoAn_DangKy_DangNhap.Models.TaiKhoan
+
+<h2 class="text-center text-primary mb-4">Đăng Ký Tài Khoản</h2>
+
+<form asp-action="DangKy" method="post" class="container" style="max-width:500px;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="TenDangNhap" class="form-label"></label>
+        <input asp-for="TenDangNhap" class="form-control" placeholder="Nhập tên đăng nhập" />
+        <span asp-validation-for="TenDangNhap" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MatKhau" class="form-label"></label>
+        <input asp-for="MatKhau" type="password" class="form-control" placeholder="Nhập mật khẩu" />
+        <small class="text-muted">(*) Vui lòng nhập lại nếu form bị lỗi.</small>
+        <span asp-validation-for="MatKhau" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Xác nhận mật khẩu</label>
+        <input name="XacNhanMatKhau" type="password" class="form-control" placeholder="Xác nhận mật khẩu" />
+        <small class="text-muted">(*) Vui lòng nhập lại nếu form bị lỗi.</small>
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary w-100">Đăng Ký</button>
+    </div>
+
+    <p class="text-danger text-center mt-2">@ViewBag.ThongBao</p>
+</form>
+
+<div class="text-center mt-3">
+    <a asp-action="DangNhap" class="btn btn-link">Đã có tài khoản? Đăng nhập</a>
+</div>
+
+
