@@ -18,44 +18,47 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         [HttpGet]
         public IActionResult DangKy()
         {
-            return View(new TaiKhoan());
+            return View();
         }
 
         [HttpPost]
-        public IActionResult DangKy(TaiKhoan taiKhoan, string XacNhanMatKhau)
+        public IActionResult DangKy(DangKyView vm)
         {
             if (!ModelState.IsValid)
-                return View(taiKhoan);
+                return View(vm);
 
-            if (taiKhoan.MatKhau != XacNhanMatKhau)
+            if (_context.TaiKhoan.Any(t => t.TenDangNhap == vm.TenDangNhap))
             {
-                ViewBag.ThongBao = "❌ Mật khẩu xác nhận không khớp.";
-                return View(taiKhoan);
+                ModelState.AddModelError("TenDangNhap", "⚠️ Tên đăng nhập đã tồn tại.");
+                return View(vm);
             }
 
-            if (_context.TaiKhoan.Any(t => t.TenDangNhap == taiKhoan.TenDangNhap))
+            // 1. Tạo người dùng
+            var nguoiDung = new NguoiDung
             {
-                ViewBag.ThongBao = "⚠️ Tên đăng nhập đã tồn tại.";
-                return View(taiKhoan);
-            }
-            if (!ModelState.IsValid)
+                MaNguoiDung = Guid.NewGuid().ToString(),
+                HoTen = vm.HoTen,
+                Email = vm.Email,
+                SDT = vm.SDT
+            };
+
+            // 2. Tạo tài khoản
+            var taiKhoan = new TaiKhoan
             {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
-                return View(taiKhoan);
-            }
+                TenDangNhap = vm.TenDangNhap,
+                MatKhau = vm.MatKhau,
+                VaiTro = "KhachHang",
+                TrangThaiTK = "Hoạt động",
+                MaNguoiDung = nguoiDung.MaNguoiDung
+            };
 
-            taiKhoan.VaiTro = "KhachHang";
-            taiKhoan.TrangThaiTK = "Hoạt động";
-
+            // 3. Lưu vào database
+            _context.NguoiDung.Add(nguoiDung);
             _context.TaiKhoan.Add(taiKhoan);
             _context.SaveChanges();
 
             TempData["ThongBao"] = "✅ Đăng ký thành công. Vui lòng đăng nhập.";
             return RedirectToAction("DangNhap");
-
         }
 
         [HttpGet]
@@ -65,6 +68,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 ViewBag.ThongBao = TempData["ThongBao"];
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> DangNhap(string tenDangNhap, string matKhau, string? returnUrl)
         {
@@ -78,10 +82,10 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
             }
 
             var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.Name, user.TenDangNhap),
-        new Claim(ClaimTypes.NameIdentifier, user.MaNguoiDung)
-    };
+            {
+                new Claim(ClaimTypes.Name, user.TenDangNhap),
+                new Claim(ClaimTypes.NameIdentifier, user.MaNguoiDung)
+            };
 
             var identity = new ClaimsIdentity(claims, "Cookies");
             var principal = new ClaimsPrincipal(identity);
@@ -90,6 +94,5 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
 
             return Redirect(returnUrl ?? "/");
         }
-
     }
 }

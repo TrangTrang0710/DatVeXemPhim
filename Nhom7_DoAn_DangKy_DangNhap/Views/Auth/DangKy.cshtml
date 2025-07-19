@@ -1,4 +1,4 @@
-﻿@model Nhom7_DoAn_DangKy_DangNhap.Models.TaiKhoan
+﻿@model Nhom7_DoAn_DangKy_DangNhap.Models.DangKyView
 
 <h2 class="text-center text-primary mb-4">Đăng Ký Tài Khoản</h2>
 
@@ -7,26 +7,41 @@
 
     <div class="mb-3">
         <label asp-for="TenDangNhap" class="form-label"></label>
-        <input asp-for="TenDangNhap" class="form-control" placeholder="Nhập tên đăng nhập" />
+        <input asp-for="TenDangNhap" class="form-control" />
         <span asp-validation-for="TenDangNhap" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="MatKhau" class="form-label"></label>
-        <input asp-for="MatKhau" type="password" class="form-control" placeholder="Nhập mật khẩu" />
-        <small class="text-muted">(*) Vui lòng nhập lại nếu form bị lỗi.</small>
+        <input asp-for="MatKhau" type="password" class="form-control" />
         <span asp-validation-for="MatKhau" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Xác nhận mật khẩu</label>
-        <input name="XacNhanMatKhau" type="password" class="form-control" placeholder="Xác nhận mật khẩu" />
-        <small class="text-muted">(*) Vui lòng nhập lại nếu form bị lỗi.</small>
+        <label asp-for="XacNhanMatKhau" class="form-label"></label>
+        <input asp-for="XacNhanMatKhau" type="password" class="form-control" />
+        <span asp-validation-for="XacNhanMatKhau" class="text-danger"></span>
     </div>
 
-    <div class="text-center">
-        <button type="submit" class="btn btn-primary w-100">Đăng Ký</button>
+    <div class="mb-3">
+        <label asp-for="HoTen" class="form-label"></label>
+        <input asp-for="HoTen" class="form-control" />
+        <span asp-validation-for="HoTen" class="text-danger"></span>
     </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SDT" class="form-label"></label>
+        <input asp-for="SDT" class="form-control" />
+        <span asp-validation-for="SDT" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Đăng Ký</button>
 
     <p class="text-danger text-center mt-2">@ViewBag.ThongBao</p>
 </form>
@@ -34,5 +49,3 @@
 <div class="text-center mt-3">
     <a asp-action="DangNhap" class="btn btn-link">Đã có tài khoản? Đăng nhập</a>
 </div>
-
-
