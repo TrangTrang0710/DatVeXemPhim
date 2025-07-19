@@ -1,0 +1,10 @@
+﻿@{
+    var suat = ViewBag.Suat;
+    var ghe = (string[])ViewBag.Ghe;
+}
+<h2>Xác nhận đặt vé</h2>
+<p><strong>Phim:</strong> @suat.Phim.TenPhim</p>
+<p><strong>Suất chiếu:</strong> @suat.NgayChieu.ToString("dd/MM/yyyy") - @suat.ThoiGianChieu</p>
+<p><strong>Ghế:</strong> @string.Join(", ", ghe)</p>
+<p><strong>Tổng tiền:</strong> @(ghe.Length * 45000) VNĐ</p>
+<a href="/" class="btn btn-primary">Xác nhận thanh toán</a>

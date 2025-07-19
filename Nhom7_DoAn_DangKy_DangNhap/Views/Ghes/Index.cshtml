@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Nhom7_DoAn_DangKy_DangNhap.Models.Ghe>
+
+@{
+    ViewData["Title"] = "Danh sách ghế";
+}
+
+<h1>Danh sách ghế</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Thêm ghế mới</a>
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Tên ghế</th>
+            <th>Phòng chiếu</th>
+            <th>Loại ghế</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.TenGhe</td>
+                <td>@item.PhongChieu?.TenPhong (@item.MaPhongChieu)</td>
+                <td>@item.LoaiGhe?.TenLoaiGhe</td>
+                <td>
+                    <a asp-action="Edit" asp-route-tenGhe="@item.TenGhe" asp-route-maPhongChieu="@item.MaPhongChieu" class="btn btn-warning btn-sm">Sửa</a>
+                    <a asp-action="Details" asp-route-tenGhe="@item.TenGhe" asp-route-maPhongChieu="@item.MaPhongChieu" class="btn btn-info btn-sm">Chi tiết</a>
+                    <a asp-action="Delete" asp-route-tenGhe="@item.TenGhe" asp-route-maPhongChieu="@item.MaPhongChieu" class="btn btn-danger btn-sm">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

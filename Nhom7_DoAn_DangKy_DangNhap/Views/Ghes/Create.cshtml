@@ -1,0 +1,43 @@
+﻿@model Nhom7_DoAn_DangKy_DangNhap.Models.Ghe
+
+@{
+    ViewData["Title"] = "Thêm ghế";
+}
+
+<h2>Thêm ghế</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="TenGhe" class="control-label"></label>
+                <input asp-for="TenGhe" class="form-control" />
+                <span asp-validation-for="TenGhe" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MaPhongChieu" class="control-label"></label>
+                <select asp-for="MaPhongChieu" class="form-control" asp-items="ViewBag.MaPhongChieu"></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MaLoaiGhe" class="control-label"></label>
+                <select asp-for="MaLoaiGhe" class="form-control" asp-items="ViewBag.MaLoaiGhe"></select>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Lưu" class="btn btn-success" />
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,52 @@
+﻿@model Nhom7_DoAn_DangKy_DangNhap.Models.Ve
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Ve</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NgayDat)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NgayDat)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TrangThai)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TrangThai)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NguoiDung)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.NguoiDung?.HoTen
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SuatChieu)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.SuatChieu?.ThoiGianChieu
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ghe)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Ghe?.TenGhe
+        </dd>
+    </dl>
+
+</div>
+<div>
+    <a asp-action="ThanhToanOnline" asp-controller="ThanhToans" asp-route-maVe="@Model.MaVe" class="btn btn-success">
+        Thanh toán qua MoMo
+    </a>
+    <a asp-action="Edit" asp-route-id="@Model?.MaVe">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

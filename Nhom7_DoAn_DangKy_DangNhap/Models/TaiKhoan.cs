@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Nhom7_DoAn_DangKy_DangNhap.Models
 {
     public class TaiKhoan
     {
-            [Key]
+        [Key]
         [Required(ErrorMessage = "Tên đăng nhập không được để trống")]
         [StringLength(25, ErrorMessage = "Tên đăng nhập tối đa 25 ký tự")]
         [Display(Name = "Tên đăng nhập")]
@@ -17,11 +18,15 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Models
         public string MatKhau { get; set; } = string.Empty;
 
         [Required]
-            public string VaiTro { get; set; } = string.Empty;
+        public string VaiTro { get; set; } = string.Empty;
 
-            [Required]
-            [Display(Name = "Trạng thái tài khoản")]
-            public string TrangThaiTK { get; set; } = string.Empty;
-        }
+        [Required]
+        [Display(Name = "Trạng thái tài khoản")]
+        public string TrangThaiTK { get; set; } = string.Empty;
+
+        [ForeignKey("MaNguoiDung")]
+        public string MaNguoiDung { get; set; } = string.Empty;
+        public NguoiDung? NguoiDung { get; set; }
     }
+}
 

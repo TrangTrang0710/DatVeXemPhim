@@ -1,8 +1,125 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model Nhom7_DoAn_DangKy_DangNhap.Models.TrangChuPhimViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- BOOTSTRAP CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+    body {
+        background: radial-gradient(circle at center, #1e1e2f, #0e0e1e);
+        color: white;
+    }
+
+    .section-title {
+        color: #ffc107;
+        border-left: 6px solid #ffc107;
+        padding-left: 12px;
+        margin: 40px 0 20px;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .card-body {
+    padding: 1rem;
+    color: white; /* Thêm dòng này */
+}
+
+    .card-film {
+        background-color: #1b1b2f;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        overflow: hidden;
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .card-film:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-film img {
+            height: 300px;
+            object-fit: cover;
+        }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .btn-ve {
+        background-color: #ffc107;
+        color: #000;
+        font-weight: bold;
+    }
+
+        .btn-ve:hover {
+            background-color: #e0a800;
+        }
+
+    .btn-trailer {
+        border: 1px solid white;
+        color: white;
+    }
+
+        .btn-trailer:hover {
+            background-color: white;
+            color: black;
+        }
+</style>
+
+<div class="container py-5">
+
+    <!-- 🔥 Phim Đang Chiếu -->
+    <div class="section-title">Phim Đang Chiếu</div>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        @foreach (var phim in Model.DangChieu)
+        {
+            if (phim == null) continue;
+
+            var thoiLuongText = phim.ThoiLuong.HasValue ? $"{phim.ThoiLuong} phút" : "Chưa rõ";
+            <div class="col">
+                <div class="card card-film h-100">
+                    <img src="/images/@phim.Anh" class="card-img-top" alt="@phim.TenPhim" />
+                    <div class="card-body">
+                        <h5 class="card-title">@phim.TenPhim</h5>
+                        <p><strong>Thể loại:</strong> @phim.TheLoai</p>
+                        <p><strong>Thời lượng:</strong> @thoiLuongText</p>
+                        <p>@phim.MoTa</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between p-3">
+                        <a href="/DatVe/ChonSuatChieu?maPhim=@phim.MaPhim" class="btn btn-ve">Đặt vé</a>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- 🍿 Phim Sắp Chiếu -->
+    <div class="section-title">Phim Sắp Chiếu</div>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        @foreach (var phim in Model.SapChieu)
+        {
+            if (phim == null) continue;
+
+            var thoiLuongText = phim.ThoiLuong.HasValue ? $"{phim.ThoiLuong} phút" : "Chưa rõ";
+            var ngayKhoiChieuText = phim.NgayKhoiChieu.HasValue ? phim.NgayKhoiChieu.Value.ToString("dd/MM/yyyy") : "Chưa rõ";
+            <div class="col">
+                <div class="card card-film h-100">
+                    <img src="/images/@phim.Anh" class="card-img-top" alt="@phim.TenPhim" />
+                    <div class="card-body">
+                        <h5 class="card-title">@phim.TenPhim</h5>
+                        <p><strong>Khởi chiếu:</strong> @ngayKhoiChieuText</p>
+                        <p><strong>Thể loại:</strong> @phim.TheLoai</p>
+                        <p><strong>Thời lượng:</strong> @thoiLuongText</p>
+                        <p>@phim.MoTa</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between p-3">
+                        <a href="#" class="btn btn-info">Tìm hiểu</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

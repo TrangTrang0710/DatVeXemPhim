@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nhom7_DoAn_DangKy_DangNhap.Data;
 
@@ -11,9 +12,11 @@ using Nhom7_DoAn_DangKy_DangNhap.Data;
 namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 {
     [DbContext(typeof(Nhom7_DoAn_DangKy_DangNhapContext))]
-    partial class Nhom7_DoAn_DangKy_DangNhapContextModelSnapshot : ModelSnapshot
+    [Migration("20250719152705_CSDLDoAnDatVeXemPhim")]
+    partial class CSDLDoAnDatVeXemPhim
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

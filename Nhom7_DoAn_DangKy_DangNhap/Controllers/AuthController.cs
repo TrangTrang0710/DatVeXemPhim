@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using Nhom7_DoAn_DangKy_DangNhap.Data;
 using Nhom7_DoAn_DangKy_DangNhap.Models;
+using System.Security.Claims;
 
 namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
 {
@@ -63,5 +65,31 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 ViewBag.ThongBao = TempData["ThongBao"];
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> DangNhap(string tenDangNhap, string matKhau, string? returnUrl)
+        {
+            var user = _context.TaiKhoan
+                .FirstOrDefault(t => t.TenDangNhap == tenDangNhap && t.MatKhau == matKhau);
+
+            if (user == null)
+            {
+                ViewBag.ThongBao = "❌ Sai tên đăng nhập hoặc mật khẩu.";
+                return View();
+            }
+
+            var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, user.TenDangNhap),
+        new Claim(ClaimTypes.NameIdentifier, user.MaNguoiDung)
+    };
+
+            var identity = new ClaimsIdentity(claims, "Cookies");
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync("Cookies", principal);
+
+            return Redirect(returnUrl ?? "/");
+        }
+
     }
 }
