@@ -1,36 +1,42 @@
 ﻿@model Nhom7_DoAn_DangKy_DangNhap.Models.TaiKhoan
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Chi tiết tài khoản";
+    Layout = "~/Views/Shared/Layout.cshtml";
 }
 
-<h1>Details</h1>
+<div class="container mt-4">
+    <div class="card shadow rounded">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Chi tiết tài khoản</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4 fw-bold">Tên đăng nhập</dt>
+                <dd class="col-sm-8">@Model.TenDangNhap</dd>
 
-<div>
-    <h4>TaiKhoan</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MatKhau)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MatKhau)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VaiTro)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VaiTro)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TrangThaiTK)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TrangThaiTK)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.TenDangNhap">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+                <dt class="col-sm-4 fw-bold">Mật khẩu</dt>
+                <dd class="col-sm-8 text-muted">••••••••</dd> <!-- Ẩn mật khẩu -->
+
+                <dt class="col-sm-4 fw-bold">Vai trò</dt>
+                <dd class="col-sm-8">@Model.VaiTro</dd>
+
+                <dt class="col-sm-4 fw-bold">Trạng thái tài khoản</dt>
+                <dd class="col-sm-8">
+                    @if (Model.TrangThaiTK == "Hoạt động")
+                    {
+                        <span class="badge bg-success">Đang hoạt động</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Đã khóa</span>
+                    }
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer text-end">
+            <a asp-action="Edit" asp-route-id="@Model?.TenDangNhap" class="btn btn-warning">Chỉnh sửa</a>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại danh sách</a>
+        </div>
+    </div>
 </div>

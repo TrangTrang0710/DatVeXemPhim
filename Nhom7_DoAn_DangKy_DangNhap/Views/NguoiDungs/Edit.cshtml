@@ -1,49 +1,46 @@
 ﻿@model Nhom7_DoAn_DangKy_DangNhap.Models.NguoiDung
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Chỉnh sửa người dùng";
 }
 
-<h1>Edit</h1>
-
-<h4>NguoiDung</h4>
+<h1>Chỉnh sửa người dùng</h1>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <input type="hidden" asp-for="MaNguoiDung" />
-            <div class="form-group">
-                <label asp-for="HoTen" class="control-label"></label>
+
+            <div class="form-group mb-3">
+                <label asp-for="HoTen" class="form-label"></label>
                 <input asp-for="HoTen" class="form-control" />
                 <span asp-validation-for="HoTen" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
+
+            <div class="form-group mb-3">
+                <label asp-for="Email" class="form-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="SDT" class="control-label"></label>
+
+            <div class="form-group mb-3">
+                <label asp-for="SDT" class="form-label"></label>
                 <input asp-for="SDT" class="form-control" />
                 <span asp-validation-for="SDT" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="MaNguoiDung" class="control-label"></label>
-                <select asp-for="MaNguoiDung" class="form-control" asp-items="ViewBag.MaNguoiDung"></select>
-            </div>
 
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại danh sách</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

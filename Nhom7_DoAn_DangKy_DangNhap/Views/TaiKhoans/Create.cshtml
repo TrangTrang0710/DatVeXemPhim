@@ -1,48 +1,60 @@
 ﻿@model Nhom7_DoAn_DangKy_DangNhap.Models.TaiKhoan
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Tạo tài khoản mới";
+    Layout = "~/Views/Shared/Layout.cshtml"; // đảm bảo Layout đã có bootstrap
 }
 
-<h1>Create</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow rounded-4">
+                <div class="card-header bg-primary text-white text-center rounded-top-4">
+                    <h3 class="mb-0">Tạo tài khoản</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-<h4>TaiKhoan</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="TenDangNhap" class="control-label"></label>
-                <input asp-for="TenDangNhap" class="form-control" />
-                <span asp-validation-for="TenDangNhap" class="text-danger"></span>
+                        <div class="mb-3">
+                            <label asp-for="TenDangNhap" class="form-label fw-bold"></label>
+                            <input asp-for="TenDangNhap" class="form-control" placeholder="Nhập tên đăng nhập" />
+                            <span asp-validation-for="TenDangNhap" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MatKhau" class="form-label fw-bold"></label>
+                            <input asp-for="MatKhau" class="form-control" placeholder="Nhập mật khẩu" type="password" />
+                            <span asp-validation-for="MatKhau" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="VaiTro" class="form-label fw-bold"></label>
+                            <input asp-for="VaiTro" class="form-control" placeholder="Nhập vai trò (Admin/User...)" />
+                            <span asp-validation-for="VaiTro" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TrangThaiTK" class="form-label fw-bold"></label>
+                            <input asp-for="TrangThaiTK" class="form-control" placeholder="Trạng thái tài khoản" />
+                            <span asp-validation-for="TrangThaiTK" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-block">Tạo tài khoản</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <a asp-action="Index" class="btn btn-link">← Quay về danh sách</a>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="MatKhau" class="control-label"></label>
-                <input asp-for="MatKhau" class="form-control" />
-                <span asp-validation-for="MatKhau" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VaiTro" class="control-label"></label>
-                <input asp-for="VaiTro" class="form-control" />
-                <span asp-validation-for="VaiTro" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TrangThaiTK" class="control-label"></label>
-                <input asp-for="TrangThaiTK" class="form-control" />
-                <span asp-validation-for="TrangThaiTK" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

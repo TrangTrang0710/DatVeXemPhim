@@ -22,25 +22,20 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         // GET: NguoiDungs
         public async Task<IActionResult> Index()
         {
-            var nhom7_DoAn_DangKy_DangNhapContext = _context.NguoiDung.Include(n => n.TaiKhoan);
-            return View(await nhom7_DoAn_DangKy_DangNhapContext.ToListAsync());
+            var usersWithAccounts = _context.NguoiDung.Include(n => n.TaiKhoan);
+            return View(await usersWithAccounts.ToListAsync());
         }
 
         // GET: NguoiDungs/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var nguoiDung = await _context.NguoiDung
                 .Include(n => n.TaiKhoan)
                 .FirstOrDefaultAsync(m => m.MaNguoiDung == id);
-            if (nguoiDung == null)
-            {
-                return NotFound();
-            }
+
+            if (nguoiDung == null) return NotFound();
 
             return View(nguoiDung);
         }
@@ -53,8 +48,6 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         }
 
         // POST: NguoiDungs/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaNguoiDung,HoTen,Email,SDT,TenDangNhap")] NguoiDung nguoiDung)
@@ -65,33 +58,29 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaNguoiDung"] = new SelectList(_context.TaiKhoan, "MaNguoiDung", "TenDangNhap", nguoiDung.MaNguoiDung);
+
+            ViewData["TenDangNhap"] = new SelectList(_context.TaiKhoan, "TenDangNhap", "TenDangNhap", nguoiDung.TaiKhoan?.TenDangNhap);
             return View(nguoiDung);
         }
 
         // GET: NguoiDungs/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var nguoiDung = await _context.NguoiDung.FindAsync(id);
-            if (nguoiDung == null)
-            {
-                return NotFound();
-            }
-            ViewData["MaNguoiDung"] = new SelectList(_context.TaiKhoan, "MaNguoiDung", "TenDangNhap", nguoiDung.MaNguoiDung);
+            var nguoiDung = await _context.NguoiDung
+                .Include(nd => nd.TaiKhoan)
+                .FirstOrDefaultAsync(nd => nd.MaNguoiDung == id);
+
+            if (nguoiDung == null) return NotFound();
+
             return View(nguoiDung);
         }
 
         // POST: NguoiDungs/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("MaNguoiDung,HoTen,Email,SDT,TenDangNhap")] NguoiDung nguoiDung)
+        public async Task<IActionResult> Edit(string id, [Bind("MaNguoiDung,HoTen,Email,SDT")] NguoiDung nguoiDung)
         {
             if (id != nguoiDung.MaNguoiDung)
             {
@@ -102,8 +91,25 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
             {
                 try
                 {
-                    _context.Update(nguoiDung);
+                    var existingNguoiDung = await _context.NguoiDung
+                        .Include(nd => nd.TaiKhoan)
+                        .FirstOrDefaultAsync(nd => nd.MaNguoiDung == id);
+
+                    if (existingNguoiDung == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Cập nhật các thuộc tính
+                    existingNguoiDung.HoTen = nguoiDung.HoTen;
+                    existingNguoiDung.Email = nguoiDung.Email;
+                    existingNguoiDung.SDT = nguoiDung.SDT;
+
+                    // Không cập nhật TaiKhoan trực tiếp từ binding!
+                    // Nếu bạn muốn cập nhật trạng thái, dùng checkbox/tùy chọn riêng và cập nhật tại đây
+
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -116,27 +122,22 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["MaNguoiDung"] = new SelectList(_context.TaiKhoan, "MaNguoiDung", "TenDangNhap", nguoiDung.MaNguoiDung);
+
             return View(nguoiDung);
         }
+
 
         // GET: NguoiDungs/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var nguoiDung = await _context.NguoiDung
                 .Include(n => n.TaiKhoan)
                 .FirstOrDefaultAsync(m => m.MaNguoiDung == id);
-            if (nguoiDung == null)
-            {
-                return NotFound();
-            }
+
+            if (nguoiDung == null) return NotFound();
 
             return View(nguoiDung);
         }
@@ -150,9 +151,9 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
             if (nguoiDung != null)
             {
                 _context.NguoiDung.Remove(nguoiDung);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

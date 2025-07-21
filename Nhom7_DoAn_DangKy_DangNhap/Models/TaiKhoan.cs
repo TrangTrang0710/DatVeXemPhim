@@ -27,6 +27,9 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Models
         [ForeignKey("MaNguoiDung")]
         public string MaNguoiDung { get; set; } = string.Empty;
         public NguoiDung? NguoiDung { get; set; }
+        [NotMapped]
+        public bool IsLocked { get; set; } = false;
+         
     }
 }
 

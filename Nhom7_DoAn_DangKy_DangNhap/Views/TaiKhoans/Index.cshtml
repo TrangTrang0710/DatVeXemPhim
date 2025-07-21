@@ -1,47 +1,71 @@
 ﻿@model IEnumerable<Nhom7_DoAn_DangKy_DangNhap.Models.TaiKhoan>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Quản lý tài khoản";
+    Layout = "~/Views/Shared/Layout.cshtml";
+    var hasData = Model != null && Model.Any();
 }
 
-<h1>Index</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Danh sách tài khoản</h2>
+        <a asp-action="Create" class="btn btn-primary">+ Thêm tài khoản</a>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MatKhau)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VaiTro)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TrangThaiTK)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.MatKhau)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VaiTro)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TrangThaiTK)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TenDangNhap">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TenDangNhap">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TenDangNhap">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    @if (hasData)
+    {
+        <table class="table table-hover table-bordered shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Tên đăng nhập</th>
+                    <th>Mật khẩu</th>
+                    <th>Vai trò</th>
+                    <th>Trạng thái</th>
+                    <th style="width: 200px">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.TenDangNhap</td>
+                        <td>@item.MatKhau</td>
+                        <td>@item.VaiTro</td>
+                        <td>
+                            @{
+                                var trangThai = item.TrangThaiTK?.Trim().ToLower();
+                                string hienThi = "Không rõ";
+                                string badge = "bg-warning";
+
+                                if (trangThai == "1" || trangThai == "hoạt động" || trangThai == "true")
+                                {
+                                    hienThi = "Đang hoạt động";
+                                    badge = "bg-success";
+                                }
+                                else if (trangThai == "0" || trangThai == "đã khóa" || trangThai == "false")
+                                {
+                                    hienThi = "Đã khóa";
+                                    badge = "bg-secondary";
+                                }
+                            }
+                            <span class="badge @badge">@hienThi</span>
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.TenDangNhap" class="btn btn-sm btn-warning me-1">Sửa</a>
+                            <a asp-action="Details" asp-route-id="@item.TenDangNhap" class="btn btn-sm btn-info me-1">Chi tiết</a>
+                            <a asp-action="Delete" asp-route-id="@item.TenDangNhap" class="btn btn-sm btn-danger">Xóa</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">Hiện chưa có tài khoản nào.</div>
+    }
+</div>
+
+<div class="text-end mt-3">
+    <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">🏠 Quay về Trang Chủ</a>
+</div>

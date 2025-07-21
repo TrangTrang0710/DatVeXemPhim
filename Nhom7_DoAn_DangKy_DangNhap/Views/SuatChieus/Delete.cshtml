@@ -1,45 +1,38 @@
 ﻿@model Nhom7_DoAn_DangKy_DangNhap.Models.SuatChieu
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Xóa Suất Chiếu";
+    Layout = "~/Views/Shared/Layout.cshtml";
 }
 
-<h1>Delete</h1>
+<div class="container mt-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0">Xác nhận xóa suất chiếu</h4>
+        </div>
+        <div class="card-body">
+            <p class="text-danger">Bạn có chắc chắn muốn xóa suất chiếu sau không?</p>
+            <dl class="row">
+                <dt class="col-sm-4">Thời gian chiếu</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.ThoiGianChieu)</dd>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>SuatChieu</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ThoiGianChieu)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ThoiGianChieu)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GiaVe)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GiaVe)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Phim)
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.Phim?.MaPhim)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PhongChieu)
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.PhongChieu?.MaPhongChieu)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="MaSuatChieu" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+                <dt class="col-sm-4">Giá vé</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.GiaVe)</dd>
+
+                <dt class="col-sm-4">Mã phim</dt>
+                <dd class="col-sm-8">@Model.Phim?.MaPhim</dd>
+
+                <dt class="col-sm-4">Mã phòng chiếu</dt>
+                <dd class="col-sm-8">@Model.PhongChieu?.MaPhongChieu</dd>
+            </dl>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="MaSuatChieu" />
+                <button type="submit" class="btn btn-danger me-2">
+                    <i class="bi bi-trash3-fill"></i> Xóa
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+            </form>
+        </div>
+    </div>
 </div>

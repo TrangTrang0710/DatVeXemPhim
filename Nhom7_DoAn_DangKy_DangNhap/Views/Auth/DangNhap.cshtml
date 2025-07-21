@@ -1,31 +1,46 @@
-﻿@{
+﻿@model Nhom7_DoAn_DangKy_DangNhap.Models.TaiKhoan
+
+@{
     ViewData["Title"] = "Đăng Nhập";
 }
 
-<h2 class="text-center text-primary mb-4">Đăng Nhập</h2>
+<div class="container mt-5">
+    <h2 class="text-center text-primary mb-4">Đăng Nhập</h2>
 
-<form asp-action="DangNhap" method="post" class="container" style="max-width: 400px;">
-    <div class="mb-3">
-        <label for="TenDangNhap" class="form-label">Tên đăng nhập</label>
-        <input name="TenDangNhap" id="TenDangNhap" class="form-control" placeholder="Nhập tên đăng nhập" required />
+    <form asp-action="DangNhap" asp-controller="Auth" method="post" class="mx-auto border rounded p-4 shadow" style="max-width: 400px;">
+        <div class="mb-3">
+            <label asp-for="TenDangNhap" class="form-label">Tên đăng nhập</label>
+            <input asp-for="TenDangNhap" class="form-control" placeholder="Nhập tên đăng nhập" autocomplete="username" />
+            <span asp-validation-for="TenDangNhap" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="MatKhau" class="form-label">Mật khẩu</label>
+            <input asp-for="MatKhau" type="password" class="form-control" placeholder="Nhập mật khẩu" autocomplete="current-password" />
+            <span asp-validation-for="MatKhau" class="text-danger small"></span>
+        </div>
+
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Đăng Nhập</button>
+        </div>
+
+        @if (ViewBag.ThongBao != null)
+        {
+            <div class="alert alert-danger text-center mt-3" role="alert">
+                @ViewBag.ThongBao
+            </div>
+        }
+    </form>
+
+    <div class="text-center mt-3">
+        <p>
+            Chưa có tài khoản?
+            <a asp-action="DangKy" asp-controller="Auth" class="fw-bold text-decoration-none">Đăng ký tại đây</a>
+        </p>
+        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary mt-2">Quay lại trang chủ</a>
     </div>
-
-    <div class="mb-3">
-        <label for="MatKhau" class="form-label">Mật khẩu</label>
-        <input name="MatKhau" id="MatKhau" type="password" class="form-control" placeholder="Nhập mật khẩu" required />
-    </div>
-
-    <div class="text-center">
-        <button type="submit" class="btn btn-primary w-100">Đăng Nhập</button>
-    </div>
-
-    @if (!string.IsNullOrEmpty(ViewBag.ThongBao))
-    {
-        <p class="text-danger text-center mt-2">@ViewBag.ThongBao</p>
-    }
-</form>
-
-<div class="text-center mt-3">
-    <p>Chưa có tài khoản? <a asp-action="DangKy" class="text-decoration-none">Đăng ký tại đây</a></p>
-    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại trang chủ</a>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

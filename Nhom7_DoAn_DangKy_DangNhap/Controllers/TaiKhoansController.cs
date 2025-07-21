@@ -22,23 +22,21 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         // GET: TaiKhoans
         public async Task<IActionResult> Index()
         {
-            return View(await _context.TaiKhoan.ToListAsync());
+            var danhSachTaiKhoan = await _context.TaiKhoan.ToListAsync();
+            return View(danhSachTaiKhoan);
         }
 
         // GET: TaiKhoans/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
-            {
+            if (string.IsNullOrEmpty(id))
                 return NotFound();
-            }
 
             var taiKhoan = await _context.TaiKhoan
                 .FirstOrDefaultAsync(m => m.TenDangNhap == id);
+
             if (taiKhoan == null)
-            {
                 return NotFound();
-            }
 
             return View(taiKhoan);
         }
@@ -46,15 +44,16 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         // GET: TaiKhoans/Create
         public IActionResult Create()
         {
+           
+            ViewBag.MaNguoiDung = new SelectList(_context.NguoiDung, "MaNguoiDung", "HoTen");
             return View();
+            
         }
 
         // POST: TaiKhoans/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TenDangNhap,MatKhau,VaiTro,TrangThaiTK")] TaiKhoan taiKhoan)
+        public async Task<IActionResult> Create([Bind("TenDangNhap,MatKhau,VaiTro,TrangThaiTK,MaNguoiDung")] TaiKhoan taiKhoan)
         {
             if (ModelState.IsValid)
             {
@@ -62,74 +61,73 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(taiKhoan);
         }
 
         // GET: TaiKhoans/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null)
-            {
+            if (string.IsNullOrEmpty(id))
                 return NotFound();
-            }
 
             var taiKhoan = await _context.TaiKhoan.FindAsync(id);
             if (taiKhoan == null)
-            {
                 return NotFound();
-            }
+
+            ViewBag.MaNguoiDung = new SelectList(_context.NguoiDung, "MaNguoiDung", "HoTen", taiKhoan.MaNguoiDung);
             return View(taiKhoan);
         }
 
         // POST: TaiKhoans/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("TenDangNhap,MatKhau,VaiTro,TrangThaiTK")] TaiKhoan taiKhoan)
+        public async Task<IActionResult> Edit(string id, [Bind("TenDangNhap,MatKhau,VaiTro,TrangThaiTK,MaNguoiDung")] TaiKhoan taiKhoan)
         {
             if (id != taiKhoan.TenDangNhap)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(taiKhoan);
+                    var taiKhoanCu = await _context.TaiKhoan.FindAsync(id);
+                    if (taiKhoanCu == null)
+                        return NotFound();
+
+                    // Cập nhật các thuộc tính cho phép chỉnh sửa
+                    taiKhoanCu.MatKhau = taiKhoan.MatKhau;
+                    taiKhoanCu.VaiTro = taiKhoan.VaiTro;
+                    taiKhoanCu.TrangThaiTK = taiKhoan.TrangThaiTK;
+                    taiKhoanCu.MaNguoiDung = taiKhoan.MaNguoiDung;
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!TaiKhoanExists(taiKhoan.TenDangNhap))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(taiKhoan);
         }
 
         // GET: TaiKhoans/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null)
-            {
+            if (string.IsNullOrEmpty(id))
                 return NotFound();
-            }
 
             var taiKhoan = await _context.TaiKhoan
                 .FirstOrDefaultAsync(m => m.TenDangNhap == id);
+
             if (taiKhoan == null)
-            {
                 return NotFound();
-            }
 
             return View(taiKhoan);
         }
@@ -143,9 +141,9 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
             if (taiKhoan != null)
             {
                 _context.TaiKhoan.Remove(taiKhoan);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
