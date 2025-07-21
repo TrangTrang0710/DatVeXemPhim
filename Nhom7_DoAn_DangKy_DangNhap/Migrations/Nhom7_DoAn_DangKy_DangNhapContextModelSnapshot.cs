@@ -40,7 +40,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasIndex("MaPhongChieu");
 
-                    b.ToTable("Ghe");
+                    b.ToTable("Ghe", (string)null);
                 });
 
             modelBuilder.Entity("Nhom7_DoAn_DangKy_DangNhap.Models.LoaiGhe", b =>
@@ -54,7 +54,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasKey("MaLoaiGhe");
 
-                    b.ToTable("LoaiGhe");
+                    b.ToTable("LoaiGhe", (string)null);
 
                     b.HasData(
                         new
@@ -84,7 +84,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasKey("MaLoaiPhong");
 
-                    b.ToTable("LoaiPhong");
+                    b.ToTable("LoaiPhong", (string)null);
 
                     b.HasData(
                         new
@@ -123,7 +123,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasKey("MaNguoiDung");
 
-                    b.ToTable("NguoiDung");
+                    b.ToTable("NguoiDung", (string)null);
 
                     b.HasData(
                         new
@@ -210,7 +210,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasIndex("TenDangNhap");
 
-                    b.ToTable("Phim");
+                    b.ToTable("Phim", (string)null);
 
                     b.HasData(
                         new
@@ -304,7 +304,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasIndex("MaLoaiPhong");
 
-                    b.ToTable("PhongChieu");
+                    b.ToTable("PhongChieu", (string)null);
 
                     b.HasData(
                         new
@@ -355,7 +355,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasIndex("MaPhongChieu");
 
-                    b.ToTable("SuatChieu");
+                    b.ToTable("SuatChieu", (string)null);
 
                     b.HasData(
                         new
@@ -433,7 +433,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                     b.HasIndex("MaNguoiDung")
                         .IsUnique();
 
-                    b.ToTable("TaiKhoan");
+                    b.ToTable("TaiKhoan", (string)null);
 
                     b.HasData(
                         new
@@ -514,7 +514,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasIndex("VeMaVe");
 
-                    b.ToTable("ThanhToan");
+                    b.ToTable("ThanhToan", (string)null);
                 });
 
             modelBuilder.Entity("Nhom7_DoAn_DangKy_DangNhap.Models.Ve", b =>
@@ -561,7 +561,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasIndex("TenGhe", "MaPhongChieu");
 
-                    b.ToTable("Ve");
+                    b.ToTable("Ve", (string)null);
                 });
 
             modelBuilder.Entity("Nhom7_DoAn_DangKy_DangNhap.Models.Ghe", b =>

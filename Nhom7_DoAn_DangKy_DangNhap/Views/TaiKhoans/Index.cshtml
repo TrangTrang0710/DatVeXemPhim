@@ -30,6 +30,25 @@
                 <td>@item.VaiTro</td>
                 <td>@item.TrangThaiTK</td>
                 <td>
+                    @{
+                        var trangThai = item.TrangThaiTK?.Trim().ToLower();
+                        string hienThi = "Không rõ";
+                        string badge = "bg-warning";
+
+                        if (trangThai == "1" || trangThai == "hoạt động" || trangThai == "true")
+                        {
+                            hienThi = "Đang hoạt động";
+                            badge = "bg-success";
+                        }
+                        else if (trangThai == "0" || trangThai == "đã khóa" || trangThai == "false")
+                        {
+                            hienThi = "Đã khóa";
+                            badge = "bg-secondary";
+                        }
+                    }
+                    <span class="badge @badge">@hienThi</span>
+                </td>
+                <td>
                     <a asp-action="Edit" asp-route-id="@item.TenDangNhap">Sửa</a> |
                     <a asp-action="Details" asp-route-id="@item.TenDangNhap">Chi tiết</a> |
                     <a asp-action="Delete" asp-route-id="@item.TenDangNhap">Xóa</a>
@@ -38,3 +57,12 @@
         }
     </tbody>
 </table>
+  }
+    else
+    {
+<div class="alert alert-info">Hiện chưa có tài khoản nào.</div>
+    }
+<div class="text-end mt-3">
+    <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">🏠 Quay về Trang Chủ</a>
+</div>
+
