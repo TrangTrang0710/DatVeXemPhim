@@ -150,6 +150,6 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         private bool TaiKhoanExists(string id)
         {
             return _context.TaiKhoan.Any(e => e.TenDangNhap == id);
-        }
+        }       
     }
 }

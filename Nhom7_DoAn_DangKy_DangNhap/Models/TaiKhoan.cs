@@ -29,7 +29,8 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Models
         public NguoiDung? NguoiDung { get; set; }
         [NotMapped]
         public bool IsLocked { get; set; } = false;
-         
+
+       
     }
 }
 
