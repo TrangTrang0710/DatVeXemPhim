@@ -322,11 +322,11 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                 columns: new[] { "MaSuatChieu", "GiaVe", "MaPhim", "MaPhongChieu", "NgayChieu", "ThoiGianChieu" },
                 values: new object[,]
                 {
-                    { "SC01", 120000.00m, "P01", "PC01", new DateTime(2025, 7, 21, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
-                    { "SC02", 120000.00m, "P02", "PC01", new DateTime(2025, 7, 22, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 21, 0, 0, 0) },
-                    { "SC03", 150000.00m, "P03", "PC02", new DateTime(2025, 7, 23, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 21, 0, 0, 0) },
-                    { "SC04", 200000.00m, "P04", "PC03", new DateTime(2025, 7, 25, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
-                    { "SC05", 120000.00m, "P06", "PC01", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) }
+                    { "SC01", 120000.00m, "P01", "PC01", new DateTime(2025, 7, 23, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC02", 120000.00m, "P02", "PC01", new DateTime(2025, 7, 24, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 21, 0, 0, 0) },
+                    { "SC03", 150000.00m, "P03", "PC02", new DateTime(2025, 7, 25, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 21, 0, 0, 0) },
+                    { "SC04", 200000.00m, "P04", "PC03", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC05", 120000.00m, "P06", "PC01", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) }
                 });
 
             migrationBuilder.CreateIndex(

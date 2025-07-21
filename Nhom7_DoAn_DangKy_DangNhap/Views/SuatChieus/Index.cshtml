@@ -12,43 +12,28 @@
 <table class="table table-bordered table-striped">
     <thead class="thead-dark">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ThoiGianChieu)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GiaVe)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phim)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhongChieu)
-            </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.ThoiGianChieu)</th>
+            <th>@Html.DisplayNameFor(model => model.GiaVe)</th>
+            <th>Phim</th>
+            <th>Phòng Chiếu</th>
+            <th>Hành động</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ThoiGianChieu)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GiaVe)
-            </td>
-            <td>
-                @item.Phim?.MaPhim)
-            </td>
-            <td>
-                @item.PhongChieu?.MaPhongChieu)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MaSuatChieu">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MaSuatChieu">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MaSuatChieu">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.ThoiGianChieu)</td>
+                <td>@Html.DisplayFor(modelItem => item.GiaVe)</td>
+                <td>@item.Phim?.MaPhim</td>
+                <td>@item.PhongChieu?.MaPhongChieu</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.MaSuatChieu">✏️ Sửa</a> |
+                    <a asp-action="Details" asp-route-id="@item.MaSuatChieu">🔍 Chi tiết</a> |
+                    <a asp-action="Delete" asp-route-id="@item.MaSuatChieu">🗑️ Xoá</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 <div class="text-end mt-3">

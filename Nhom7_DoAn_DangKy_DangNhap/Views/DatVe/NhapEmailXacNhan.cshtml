@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Nhập Email để nhận OTP";
+}
+<h3>Nhập email để nhận mã OTP</h3>
+<form method="post" action="/DatVe/XacNhanThanhToan">
+    <input type="hidden" name="maSuatChieu" value="@ViewBag.MaSuatChieu" />
+    @foreach (var ghe in ViewBag.Ghe as string[])
+    {
+        <input type="hidden" name="gheDaChon" value="@ghe" />
+    }
+    <div class="mb-3">
+        <label>Email:</label>
+        <input type="email" name="email" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Gửi OTP</button>
+</form>

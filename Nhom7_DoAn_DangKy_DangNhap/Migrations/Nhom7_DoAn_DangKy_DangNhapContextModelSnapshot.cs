@@ -40,7 +40,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasIndex("MaPhongChieu");
 
-                    b.ToTable("Ghe", (string)null);
+                    b.ToTable("Ghe");
                 });
 
             modelBuilder.Entity("Nhom7_DoAn_DangKy_DangNhap.Models.LoaiGhe", b =>
@@ -54,7 +54,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasKey("MaLoaiGhe");
 
-                    b.ToTable("LoaiGhe", (string)null);
+                    b.ToTable("LoaiGhe");
 
                     b.HasData(
                         new
@@ -84,7 +84,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasKey("MaLoaiPhong");
 
-                    b.ToTable("LoaiPhong", (string)null);
+                    b.ToTable("LoaiPhong");
 
                     b.HasData(
                         new
@@ -123,7 +123,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasKey("MaNguoiDung");
 
-                    b.ToTable("NguoiDung", (string)null);
+                    b.ToTable("NguoiDung");
 
                     b.HasData(
                         new
@@ -210,7 +210,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasIndex("TenDangNhap");
 
-                    b.ToTable("Phim", (string)null);
+                    b.ToTable("Phim");
 
                     b.HasData(
                         new
@@ -304,7 +304,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasIndex("MaLoaiPhong");
 
-                    b.ToTable("PhongChieu", (string)null);
+                    b.ToTable("PhongChieu");
 
                     b.HasData(
                         new
@@ -355,7 +355,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasIndex("MaPhongChieu");
 
-                    b.ToTable("SuatChieu", (string)null);
+                    b.ToTable("SuatChieu");
 
                     b.HasData(
                         new
@@ -364,7 +364,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                             GiaVe = 120000.00m,
                             MaPhim = "P01",
                             MaPhongChieu = "PC01",
-                            NgayChieu = new DateTime(2025, 7, 21, 0, 0, 0, 0, DateTimeKind.Local),
+                            NgayChieu = new DateTime(2025, 7, 23, 0, 0, 0, 0, DateTimeKind.Local),
                             ThoiGianChieu = new TimeSpan(0, 19, 0, 0, 0)
                         },
                         new
@@ -373,7 +373,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                             GiaVe = 120000.00m,
                             MaPhim = "P02",
                             MaPhongChieu = "PC01",
-                            NgayChieu = new DateTime(2025, 7, 22, 0, 0, 0, 0, DateTimeKind.Local),
+                            NgayChieu = new DateTime(2025, 7, 24, 0, 0, 0, 0, DateTimeKind.Local),
                             ThoiGianChieu = new TimeSpan(0, 21, 0, 0, 0)
                         },
                         new
@@ -382,7 +382,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                             GiaVe = 150000.00m,
                             MaPhim = "P03",
                             MaPhongChieu = "PC02",
-                            NgayChieu = new DateTime(2025, 7, 23, 0, 0, 0, 0, DateTimeKind.Local),
+                            NgayChieu = new DateTime(2025, 7, 25, 0, 0, 0, 0, DateTimeKind.Local),
                             ThoiGianChieu = new TimeSpan(0, 21, 0, 0, 0)
                         },
                         new
@@ -391,7 +391,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                             GiaVe = 200000.00m,
                             MaPhim = "P04",
                             MaPhongChieu = "PC03",
-                            NgayChieu = new DateTime(2025, 7, 25, 0, 0, 0, 0, DateTimeKind.Local),
+                            NgayChieu = new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local),
                             ThoiGianChieu = new TimeSpan(0, 20, 30, 0, 0)
                         },
                         new
@@ -400,7 +400,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                             GiaVe = 120000.00m,
                             MaPhim = "P06",
                             MaPhongChieu = "PC01",
-                            NgayChieu = new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local),
+                            NgayChieu = new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local),
                             ThoiGianChieu = new TimeSpan(0, 22, 30, 0, 0)
                         });
                 });
@@ -433,7 +433,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                     b.HasIndex("MaNguoiDung")
                         .IsUnique();
 
-                    b.ToTable("TaiKhoan", (string)null);
+                    b.ToTable("TaiKhoan");
 
                     b.HasData(
                         new
@@ -514,7 +514,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasIndex("VeMaVe");
 
-                    b.ToTable("ThanhToan", (string)null);
+                    b.ToTable("ThanhToan");
                 });
 
             modelBuilder.Entity("Nhom7_DoAn_DangKy_DangNhap.Models.Ve", b =>
@@ -561,7 +561,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
                     b.HasIndex("TenGhe", "MaPhongChieu");
 
-                    b.ToTable("Ve", (string)null);
+                    b.ToTable("Ve");
                 });
 
             modelBuilder.Entity("Nhom7_DoAn_DangKy_DangNhap.Models.Ghe", b =>

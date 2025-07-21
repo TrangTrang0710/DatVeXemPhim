@@ -5,7 +5,9 @@ using Nhom7_DoAn_DangKy_DangNhap.Data;
 using Nhom7_DoAn_DangKy_DangNhap.Models;
 using Nhom7_DoAn_DangKy_DangNhap.Services;
 using System.Security.Claims;
-
+using System.Net.Mail;
+using System.Net;
+using System.Threading.Tasks;
 namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
 {
     public class DatVeController : Controller
@@ -50,18 +52,26 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
 
             var gheList = await _context.Ghe
                 .Where(g => g.MaPhongChieu == suatChieu.MaPhongChieu)
+                .OrderBy(g => g.TenGhe) // Đảm bảo sắp xếp
                 .ToListAsync();
 
-            // ✅ Lấy danh sách ghế đã được đặt cho suất chiếu này
+            // Danh sách ghế đã đặt
             var gheDaDat = await _context.Ve
                 .Where(v => v.MaSuatChieu == maSuatChieu && v.TrangThai == "Đã thanh toán")
                 .Select(v => v.TenGhe)
                 .ToListAsync();
 
-            ViewBag.SuatChieu = suatChieu;
-            ViewBag.GheDaDat = gheDaDat; // Truyền sang View
+            // Tạo Dictionary<string, List<Ghe>> để render theo hàng
+            var gheTheoHang = gheList
+                .GroupBy(g => g.TenGhe.Substring(0, 1)) // A1 => A
+                .OrderBy(g => g.Key)
+                .ToDictionary(g => g.Key, g => g.OrderBy(ghe => Convert.ToInt32(ghe.TenGhe.Substring(1))).ToList());
 
-            return View(gheList);
+            ViewBag.SuatChieu = suatChieu;
+            ViewBag.GheDaDat = gheDaDat;
+            ViewBag.GheTheoHang = gheTheoHang;
+
+            return View();
         }
 
 
@@ -85,88 +95,97 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         }
 
         // ✅ Xác nhận thanh toán -> tạo vé + gửi OTP
-        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> XacNhanThanhToan(string[] gheDaChon, string maSuatChieu, string phuongThuc)
+        public async Task<IActionResult> XacNhanThanhToan(string[] gheDaChon, string maSuatChieu, string email)
         {
             if (gheDaChon == null || gheDaChon.Length == 0)
-                return BadRequest("Bạn chưa chọn ghế nào!");
+                return BadRequest("Chưa chọn ghế.");
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
-                return RedirectToAction("DangNhap", "TaiKhoans");
+            // ✅ Sinh mã OTP
+            string otp = new Random().Next(100000, 999999).ToString();
+            TempData["OTP"] = otp;
+            TempData["Email"] = email;
+            TempData["GheDaChon"] = string.Join("|", gheDaChon);
+            TempData["MaSuatChieu"] = maSuatChieu;
 
-            var suat = await _context.SuatChieu.FirstOrDefaultAsync(s => s.MaSuatChieu == maSuatChieu);
-            if (suat == null)
-                return NotFound("Không tìm thấy suất chiếu.");
+            // ✅ Gửi OTP
+            await _emailService.SendEmailAsync(email, "Mã OTP Xác Nhận", $"Mã OTP của bạn là: {otp}");
 
-            var danhSachGhe = await _context.Ghe.Where(g => gheDaChon.Contains(g.TenGhe)).ToListAsync();
-            var danhSachMaVe = new List<string>();
-
-            foreach (var ghe in danhSachGhe)
-            {
-                var ve = new Ve
-                {
-                    MaVe = Guid.NewGuid().ToString(),
-                    MaSuatChieu = suat.MaSuatChieu,
-                    TenGhe = ghe.TenGhe,
-                    MaPhongChieu = ghe.MaPhongChieu,
-                    MaNguoiDung = userId,
-                    TrangThai = "Chờ OTP"
-                };
-
-                _context.Ve.Add(ve);
-                danhSachMaVe.Add(ve.MaVe);
-            }
-
-            await _context.SaveChangesAsync();
-
-            // ✅ Sinh mã OTP và lưu Session
-            var otp = new Random().Next(100000, 999999).ToString();
-            HttpContext.Session.SetString("OTP", otp);
-            HttpContext.Session.SetString("DanhSachMaVe", string.Join(",", danhSachMaVe));
-
-            // ✅ Giả lập gửi OTP (console)
-            Console.WriteLine($"OTP của bạn: {otp}");
-
-            // ✅ Gửi OTP qua Email thực tế
-            var user = await _context.NguoiDung.FirstOrDefaultAsync(u => u.MaNguoiDung == userId);
-            if (user != null && !string.IsNullOrEmpty(user.Email))
-            {
-                await _emailService.SendEmailAsync(
-                    user.Email,
-                    "Mã OTP xác thực",
-                    $"Xin chào {user.HoTen},<br/><br/>Mã OTP của bạn là: <b>{otp}</b>.<br/>Vui lòng nhập mã để hoàn tất thanh toán."
-                );
-            }
             return View("NhapOTP");
         }
 
-        // ✅ Kiểm tra OTP
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> XacNhanOTP(string otpInput)
-        {
-            var otp = HttpContext.Session.GetString("OTP");
-            var danhSachMaVe = HttpContext.Session.GetString("DanhSachMaVe")?.Split(",");
 
-            if (otpInput == otp && danhSachMaVe != null)
+        [HttpPost]
+        public async Task<IActionResult> GuiOTP(string email)
+        {
+            // Tạo mã OTP
+            string otp = new Random().Next(100000, 999999).ToString();
+            TempData["OTP"] = otp;
+            TempData["Email"] = email;
+
+            var message = new MailMessage("he_thong@gmail.com", email)
             {
-                var veList = await _context.Ve.Where(v => danhSachMaVe.Contains(v.MaVe)).ToListAsync();
-                foreach (var ve in veList)
+                Subject = "Mã OTP xác nhận đặt vé",
+                Body = $"Mã OTP của bạn là: {otp}",
+                IsBodyHtml = false
+            };
+
+            using (var smtp = new SmtpClient("smtp.gmail.com", 587))
+            {
+                smtp.Credentials = new NetworkCredential("he_thong@gmail.com", "APP_PASSWORD_16_KY_TU");
+                smtp.EnableSsl = true;
+                await smtp.SendMailAsync(message);
+            }
+
+            TempData.Keep("OTP");
+            TempData.Keep("Email");
+            TempData.Keep("GheDaChon");
+            TempData.Keep("MaSuatChieu");
+
+            return View("NhapOTP");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> XacNhanOTP(string maOTP)
+        {
+            var otp = TempData["OTP"] as string;
+            var email = TempData["Email"] as string;
+            var gheDaChon = (TempData["GheDaChon"] as string)?.Split('|');
+            var maSuatChieu = TempData["MaSuatChieu"] as string;
+
+            if (maOTP == otp)
+            {
+                // ✅ Lưu vé vào DB
+                foreach (var ghe in gheDaChon!)
                 {
-                    ve.TrangThai = "Đã thanh toán";
+                    var ve = new Ve
+                    {
+                        MaVe = Guid.NewGuid().ToString(),
+                        MaNguoiDung = "ND01", // Tạm cứng
+                        MaSuatChieu = maSuatChieu!,
+                        TenGhe = ghe,
+                        NgayDat = DateTime.Now,
+                        TrangThai = "Đã thanh toán"
+                    };
+                    _context.Ve.Add(ve);
                 }
                 await _context.SaveChangesAsync();
 
-                HttpContext.Session.Remove("OTP");
-                HttpContext.Session.Remove("DanhSachMaVe");
-
-                return View("ThanhCong");
+                return View("ThanhToanThanhCong");
             }
 
-            ViewBag.Error = "OTP không đúng, vui lòng thử lại.";
+            ViewBag.ThongBao = "❌ Mã OTP không đúng.";
+            TempData.Keep();
             return View("NhapOTP");
+        }
+
+
+
+
+
+        public IActionResult ThongBaoThanhToanThanhCong()
+        {
+            return View();
         }
     }
 }

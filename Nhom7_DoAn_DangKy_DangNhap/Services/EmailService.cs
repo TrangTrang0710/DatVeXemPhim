@@ -1,16 +1,15 @@
-﻿using Microsoft.Extensions.Options;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
+using Microsoft.Extensions.Options;
 
 namespace Nhom7_DoAn_DangKy_DangNhap.Services
 {
     public class EmailSettings
     {
-        public string SmtpServer { get; set; } = string.Empty;
+        public string? SenderEmail { get; set; }
+        public string? SenderPassword { get; set; }
+        public string? SmtpServer { get; set; }
         public int Port { get; set; }
-        public string SenderName { get; set; } = string.Empty;
-        public string SenderEmail { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
     }
 
     public class EmailService
@@ -24,23 +23,24 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Services
 
         public async Task SendEmailAsync(string toEmail, string subject, string body)
         {
-            using var client = new SmtpClient(_settings.SmtpServer, _settings.Port)
+            using (var client = new SmtpClient(_settings.SmtpServer, _settings.Port))
             {
-                Credentials = new NetworkCredential(_settings.SenderEmail, _settings.Password),
-                EnableSsl = true
-            };
+                client.Credentials = new NetworkCredential(_settings.SenderEmail, _settings.SenderPassword);
+                client.EnableSsl = true;
+                client.UseDefaultCredentials = false;
 
-            var mail = new MailMessage
-            {
-                From = new MailAddress(_settings.SenderEmail, _settings.SenderName),
-                Subject = subject,
-                Body = body,
-                IsBodyHtml = true
-            };
+                var message = new MailMessage
+                {
+                    From = new MailAddress(_settings.SenderEmail),
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = true
+                };
 
-            mail.To.Add(toEmail);
+                message.To.Add(toEmail);
 
-            await client.SendMailAsync(mail);
+                await client.SendMailAsync(message);
+            }
         }
     }
 }

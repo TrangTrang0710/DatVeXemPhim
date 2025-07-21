@@ -1,12 +1,17 @@
 ﻿@{
     var suat = ViewBag.Suat;
     var ghe = (string[])ViewBag.Ghe;
+    var tongTien = ghe.Length * 45000;
 }
-<h2>Xác nhận đặt vé</h2>
-<p><strong>Phim:</strong> @suat.Phim.TenPhim</p>
-<p><strong>Suất chiếu:</strong> @suat.NgayChieu.ToString("dd/MM/yyyy") - @suat.ThoiGianChieu</p>
-<p><strong>Ghế:</strong> @string.Join(", ", ghe)</p>
-<p><strong>Tổng tiền:</strong> @(ghe.Length * 45000) VNĐ</p>
+
+<h2 class="mb-4">🎟️ Xác nhận đặt vé</h2>
+
+<ul class="list-group mb-4">
+    <li class="list-group-item"><strong>🎬 Phim:</strong> @suat.Phim.TenPhim</li>
+    <li class="list-group-item"><strong>🕒 Suất chiếu:</strong> @suat.NgayChieu.ToString("dd/MM/yyyy") - @suat.ThoiGianChieu</li>
+    <li class="list-group-item"><strong>💺 Ghế đã chọn:</strong> @string.Join(", ", ghe)</li>
+    <li class="list-group-item"><strong>💵 Tổng tiền:</strong> @tongTien.ToString("N0") VNĐ</li>
+</ul>
 
 <form asp-action="XacNhanThanhToan" method="post">
     @foreach (var g in ghe)
@@ -14,19 +19,36 @@
         <input type="hidden" name="gheDaChon" value="@g" />
     }
     <input type="hidden" name="maSuatChieu" value="@suat.MaSuatChieu" />
-    <input type="hidden" name="phuongThuc" value="@ViewBag.PhuongThuc" />
 
-    <div class="form-group">
-        <label>Phương thức thanh toán</label>
-        <select name="phuongThuc" class="form-control" required>
+    <div class="form-group mb-3">
+        <label><strong>🔒 Phương thức thanh toán</strong></label>
+        <select name="phuongThuc" class="form-control" id="phuongThuc" required>
             <option value="">-- Chọn phương thức --</option>
-            <option value="MoMo">MoMo</option>
+            <option value="MoMo">Ví MoMo</option>
             <option value="VNPay">VNPay</option>
-            <option value="OTP">Thanh toán OTP</option>
+            <option value="OTP">Xác nhận qua Email</option>
         </select>
     </div>
 
-    <button type="submit" class="btn btn-primary">Xác nhận thanh toán</button>
+    <div class="form-group mb-3" id="emailSection" style="display: none;">
+        <label for="email"><strong>📧 Nhập Email nhận mã OTP</strong></label>
+        <input type="email" name="email" class="form-control" placeholder="example@email.com" />
+    </div>
+
+    <button type="submit" class="btn btn-success">✅ Xác nhận & Thanh toán</button>
 </form>
 
-<a href="d:\doan\webdatvexemphim\nhom7_doan_dangky_dangnhap\nhom7_doan_dangky_dangnhap\views\datve\chonsuatchieu.cshtml">d:\doan\webdatvexemphim\nhom7_doan_dangky_dangnhap\nhom7_doan_dangky_dangnhap\views\datve\chonsuatchieu.cshtml</a>
+<a asp-action="ChonSuatChieu" asp-controller="DatVe" class="btn btn-secondary mt-3">⬅ Quay lại chọn suất chiếu</a>
+
+@section Scripts {
+    <script>
+        document.getElementById("phuongThuc").addEventListener("change", function () {
+            const emailSection = document.getElementById("emailSection");
+            if (this.value === "OTP") {
+                emailSection.style.display = "block";
+            } else {
+                emailSection.style.display = "none";
+            }
+        });
+    </script>
+}

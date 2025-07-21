@@ -8,8 +8,7 @@
 }
 
 <h2>@ViewData["Title"]</h2>
-<!-- ✅ Nút quay lại -->
-<a href="@Url.Action("Index", "ThongKe")" class="btn btn-secondary mb-3">← Quay lại danh sách thống kê</a>
+
 
 <form method="get" class="mb-3">
     <label>Từ ngày: </label>
@@ -51,8 +50,8 @@ else
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(x => x.TenPhim)));
-    const data = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(x => x.TongDoanhThu)));
+    const labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Select(x => x.TenPhim)));
+    const data = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Select(x => x.TongDoanhThu)));
     const backgroundColors = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(backgroundColors));
 
     const ctx = document.getElementById('pieChart')?.getContext('2d');
@@ -82,3 +81,7 @@ else
         });
     }
 </script>
+<div class="text-end mt-3">
+    <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">🏠 Quay về Trang Chủ</a>
+</div>
+

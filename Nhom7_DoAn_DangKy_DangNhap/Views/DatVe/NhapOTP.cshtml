@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Nhập mã OTP";
+}
+<h3>Nhập mã OTP đã gửi về email</h3>
+<form method="post" action="/DatVe/XacNhanOTP">
+    <div class="mb-3">
+        <label>Nhập mã OTP:</label>
+        <input type="text" name="maOTP" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-success">Xác nhận</button>
+</form>
+@if (ViewBag.ThongBao != null)
+{
+    <p class="text-danger">@ViewBag.ThongBao</p>
+}

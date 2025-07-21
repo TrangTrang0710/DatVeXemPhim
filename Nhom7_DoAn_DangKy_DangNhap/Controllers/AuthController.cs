@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Nhom7_DoAn_DangKy_DangNhap.Data;
 using Nhom7_DoAn_DangKy_DangNhap.Models;
 using System.Security.Claims;
@@ -78,6 +79,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
             }
 
             var taiKhoan = _context.TaiKhoan
+                .AsNoTracking()
                 .FirstOrDefault(x => x.TenDangNhap == tenDangNhap && x.MatKhau == matKhau);
 
             if (taiKhoan != null)
