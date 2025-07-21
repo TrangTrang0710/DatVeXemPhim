@@ -364,7 +364,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                             GiaVe = 120000.00m,
                             MaPhim = "P01",
                             MaPhongChieu = "PC01",
-                            NgayChieu = new DateTime(2025, 7, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            NgayChieu = new DateTime(2025, 7, 21, 0, 0, 0, 0, DateTimeKind.Local),
                             ThoiGianChieu = new TimeSpan(0, 19, 0, 0, 0)
                         },
                         new
@@ -373,7 +373,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                             GiaVe = 120000.00m,
                             MaPhim = "P02",
                             MaPhongChieu = "PC01",
-                            NgayChieu = new DateTime(2025, 7, 21, 0, 0, 0, 0, DateTimeKind.Local),
+                            NgayChieu = new DateTime(2025, 7, 22, 0, 0, 0, 0, DateTimeKind.Local),
                             ThoiGianChieu = new TimeSpan(0, 21, 0, 0, 0)
                         },
                         new
@@ -382,7 +382,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                             GiaVe = 150000.00m,
                             MaPhim = "P03",
                             MaPhongChieu = "PC02",
-                            NgayChieu = new DateTime(2025, 7, 22, 0, 0, 0, 0, DateTimeKind.Local),
+                            NgayChieu = new DateTime(2025, 7, 23, 0, 0, 0, 0, DateTimeKind.Local),
                             ThoiGianChieu = new TimeSpan(0, 21, 0, 0, 0)
                         },
                         new
@@ -391,7 +391,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                             GiaVe = 200000.00m,
                             MaPhim = "P04",
                             MaPhongChieu = "PC03",
-                            NgayChieu = new DateTime(2025, 7, 24, 0, 0, 0, 0, DateTimeKind.Local),
+                            NgayChieu = new DateTime(2025, 7, 25, 0, 0, 0, 0, DateTimeKind.Local),
                             ThoiGianChieu = new TimeSpan(0, 20, 30, 0, 0)
                         },
                         new
@@ -400,7 +400,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                             GiaVe = 120000.00m,
                             MaPhim = "P06",
                             MaPhongChieu = "PC01",
-                            NgayChieu = new DateTime(2025, 7, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            NgayChieu = new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local),
                             ThoiGianChieu = new TimeSpan(0, 22, 30, 0, 0)
                         });
                 });

@@ -1,0 +1,76 @@
+﻿@model List<Nhom7_DoAn_DangKy_DangNhap.Models.ThongKeVeBanView>
+
+@{
+    ViewData["Title"] = "Thống kê vé bán";
+    var colors = new[] { "#ff6384", "#36a2eb", "#ffce56", "#4bc0c0", "#9966ff", "#ff9f40", "#c9cbcf" };
+    var backgroundColors = Model.Select((x, i) => colors[i % colors.Length]).ToList();
+}
+
+<h2 class="mb-4">🎟️ Thống kê số vé bán theo phim</h2>
+<!-- ✅ Nút quay lại -->
+<a href="@Url.Action("Index", "ThongKe")" class="btn btn-secondary mb-3">← Quay lại danh sách thống kê</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Tên phim</th>
+            <th>Số vé đã bán</th>
+            <th>Tổng doanh thu</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.TenPhim</td>
+                <td>@item.SoLuongVe</td>
+                <td>@string.Format("{0:N0} đ", item.TongDoanhThu)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Biểu đồ cột -->
+<div style="max-width: 700px; margin: auto;">
+    <canvas id="barChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(x => x.TenPhim)));
+    const data = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(x => x.SoLuongVe)));
+    const backgroundColors = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(@backgroundColors));
+
+    const ctx = document.getElementById('barChart').getContext('2d');
+    const barChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Số lượng vé bán',
+                data: data,
+                backgroundColor: backgroundColors
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Biểu đồ số lượng vé bán theo phim'
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+</script>

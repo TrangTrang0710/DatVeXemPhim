@@ -1,8 +1,18 @@
 ﻿@model IEnumerable<Nhom7_DoAn_DangKy_DangNhap.Models.SuatChieu>
+
 @{
     var phim = ViewBag.Phim;
 }
-<h2>Chọn suất chiếu cho @phim.TenPhim</h2>
+
+@if (phim != null)
+{
+    <h2>Chọn suất chiếu cho @phim.TenPhim</h2>
+}
+else
+{
+    <h2>Danh sách suất chiếu</h2>
+}
+
 <table class="table table-dark table-bordered">
     <thead>
         <tr>
@@ -13,16 +23,27 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var sc in Model)
+        @if (!Model.Any())
         {
             <tr>
-                <td>@sc.NgayChieu.ToString("dd/MM/yyyy")</td>
-                <td>@sc.ThoiGianChieu.ToString(@"hh\:mm")</td>
-                <td>@sc.PhongChieu?.TenPhong</td>
-                <td>
-                    <a href="/DatVe/ChonGhe?maSuatChieu=@sc.MaSuatChieu" class="btn btn-warning">Chọn ghế</a>
-                </td>
+                <td colspan="4" class="text-center">Không có suất chiếu nào.</td>
             </tr>
+        }
+        else
+        {
+            @foreach (var sc in Model)
+            {
+                <tr>
+                    <td>@sc.NgayChieu.ToString("dd/MM/yyyy")</td>
+                    <td>@sc.ThoiGianChieu.ToString(@"hh\:mm")</td>
+                    <td>@sc.PhongChieu?.TenPhong</td>
+                    <td>
+                        <a asp-controller="DatVe" asp-action="ChonGhe" asp-route-maSuatChieu="@sc.MaSuatChieu" class="btn btn-warning">
+                            Chọn ghế
+                        </a>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>

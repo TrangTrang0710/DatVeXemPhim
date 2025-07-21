@@ -2,52 +2,69 @@
 using Microsoft.Extensions.DependencyInjection;
 using Nhom7_DoAn_DangKy_DangNhap.Data;
 using Nhom7_DoAn_DangKy_DangNhap.Models;
-using System.Reflection.Emit;
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<Nhom7_DoAn_DangKy_DangNhapContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Nhom7_DoAn_DangKy_DangNhapContext") ?? throw new InvalidOperationException("Connection string 'Nhom7_DoAn_DangKy_DangNhapContext' not found.")));
+using Nhom7_DoAn_DangKy_DangNhap.Services;
 
-// ✅ Thêm xác thực cookie
+var builder = WebApplication.CreateBuilder(args);
+
+// Kết nối DB
+builder.Services.AddDbContext<Nhom7_DoAn_DangKy_DangNhapContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("Nhom7_DoAn_DangKy_DangNhapContext")
+        ?? throw new InvalidOperationException("Connection string not found.")
+    )
+);
+
+// Xác thực bằng Cookie
 builder.Services.AddAuthentication("Cookies")
     .AddCookie("Cookies", options =>
     {
-        options.LoginPath = "/Auth/DangNhap"; // đường dẫn đến trang đăng nhập
+        options.LoginPath = "/Auth/DangNhap"; // đường dẫn đăng nhập
     });
 
-builder.Services.AddAuthorization(); // ✅ Thêm phần quyền
+// Phân quyền
+builder.Services.AddAuthorization();
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// Session
 builder.Services.AddSession();
+// Đăng ký EmailService và cấu hình EmailSettings
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddTransient<EmailService>();
+
+
+// Thêm MVC
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// ✅ Tự động migrate DB và seed dữ liệu ghế
+// ✅ Apply Migrations + Seed dữ liệu nếu cần
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<Nhom7_DoAn_DangKy_DangNhapContext>();
     var services = scope.ServiceProvider;
-   
-    // Apply migrations (nếu chưa có)
-    context.Database.Migrate();
-    SeadData.Initialize(services);
-
+    context.Database.Migrate(); // Auto migrate
+    SeadData.Initialize(services); // Seed data ghế
 }
+
+// Xử lý exception nếu không phải chế độ development
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
+
 app.UseStaticFiles();
 
 app.UseRouting();
 
+// Session & Auth Middleware
 app.UseSession();
-app.UseAuthentication(); // ✅ Sử dụng xác thực cookie
-
+app.UseAuthentication();
 app.UseAuthorization();
 
+// Định tuyến
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
 
+// Chạy app
 app.Run();

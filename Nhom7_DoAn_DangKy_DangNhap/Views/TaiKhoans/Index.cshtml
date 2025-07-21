@@ -1,47 +1,40 @@
 ﻿@model IEnumerable<Nhom7_DoAn_DangKy_DangNhap.Models.TaiKhoan>
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Quản lý Tài Khoản";
 }
 
-<h1>Index</h1>
+<h2 class="mb-4 text-primary">Quản lý Tài Khoản</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-success mb-3" asp-action="Create">➕ Thêm Tài Khoản</a>
 </p>
-<table class="table">
+
+<table class="table table-hover table-bordered">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MatKhau)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VaiTro)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TrangThaiTK)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.TenDangNhap)</th>
+            <th>@Html.DisplayNameFor(model => model.MaNguoiDung)</th>
+            <th>@Html.DisplayNameFor(model => model.MatKhau)</th>
+            <th>@Html.DisplayNameFor(model => model.VaiTro)</th>
+            <th>@Html.DisplayNameFor(model => model.TrangThaiTK)</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.MatKhau)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VaiTro)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TrangThaiTK)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TenDangNhap">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TenDangNhap">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TenDangNhap">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.TenDangNhap</td>
+                <td>@item.MaNguoiDung</td>
+                <td>@item.MatKhau</td>
+                <td>@item.VaiTro</td>
+                <td>@item.TrangThaiTK</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.TenDangNhap">Sửa</a> |
+                    <a asp-action="Details" asp-route-id="@item.TenDangNhap">Chi tiết</a> |
+                    <a asp-action="Delete" asp-route-id="@item.TenDangNhap">Xóa</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

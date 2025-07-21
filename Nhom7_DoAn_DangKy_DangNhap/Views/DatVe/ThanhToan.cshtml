@@ -7,4 +7,26 @@
 <p><strong>Suất chiếu:</strong> @suat.NgayChieu.ToString("dd/MM/yyyy") - @suat.ThoiGianChieu</p>
 <p><strong>Ghế:</strong> @string.Join(", ", ghe)</p>
 <p><strong>Tổng tiền:</strong> @(ghe.Length * 45000) VNĐ</p>
-<a href="/" class="btn btn-primary">Xác nhận thanh toán</a>
+
+<form asp-action="XacNhanThanhToan" method="post">
+    @foreach (var g in ghe)
+    {
+        <input type="hidden" name="gheDaChon" value="@g" />
+    }
+    <input type="hidden" name="maSuatChieu" value="@suat.MaSuatChieu" />
+    <input type="hidden" name="phuongThuc" value="@ViewBag.PhuongThuc" />
+
+    <div class="form-group">
+        <label>Phương thức thanh toán</label>
+        <select name="phuongThuc" class="form-control" required>
+            <option value="">-- Chọn phương thức --</option>
+            <option value="MoMo">MoMo</option>
+            <option value="VNPay">VNPay</option>
+            <option value="OTP">Thanh toán OTP</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Xác nhận thanh toán</button>
+</form>
+
+<a href="d:\doan\webdatvexemphim\nhom7_doan_dangky_dangnhap\nhom7_doan_dangky_dangnhap\views\datve\chonsuatchieu.cshtml">d:\doan\webdatvexemphim\nhom7_doan_dangky_dangnhap\nhom7_doan_dangky_dangnhap\views\datve\chonsuatchieu.cshtml</a>

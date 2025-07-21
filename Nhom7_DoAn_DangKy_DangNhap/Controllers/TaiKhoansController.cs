@@ -25,20 +25,26 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
             return View(await _context.TaiKhoan.ToListAsync());
         }
 
+        // GET: TaiKhoans/DangNhap
+        [HttpGet]
+        
+
+        // POST: TaiKhoans/DangNhap
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        
+            
+
+
         // GET: TaiKhoans/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var taiKhoan = await _context.TaiKhoan
                 .FirstOrDefaultAsync(m => m.TenDangNhap == id);
-            if (taiKhoan == null)
-            {
-                return NotFound();
-            }
+
+            if (taiKhoan == null) return NotFound();
 
             return View(taiKhoan);
         }
@@ -50,8 +56,6 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         }
 
         // POST: TaiKhoans/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TenDangNhap,MatKhau,VaiTro,TrangThaiTK")] TaiKhoan taiKhoan)
@@ -68,30 +72,21 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         // GET: TaiKhoans/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var taiKhoan = await _context.TaiKhoan.FindAsync(id);
-            if (taiKhoan == null)
-            {
-                return NotFound();
-            }
+            if (taiKhoan == null) return NotFound();
+
+            ViewData["MaNguoiDung"] = new SelectList(_context.NguoiDung, "MaNguoiDung", "HoTen", taiKhoan.MaNguoiDung);
             return View(taiKhoan);
         }
 
         // POST: TaiKhoans/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("TenDangNhap,MatKhau,VaiTro,TrangThaiTK")] TaiKhoan taiKhoan)
+        public async Task<IActionResult> Edit(string id, [Bind("TenDangNhap,MatKhau,VaiTro,TrangThaiTK,MaNguoiDung")] TaiKhoan taiKhoan)
         {
-            if (id != taiKhoan.TenDangNhap)
-            {
-                return NotFound();
-            }
+            if (id != taiKhoan.TenDangNhap) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -103,13 +98,9 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!TaiKhoanExists(taiKhoan.TenDangNhap))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -119,17 +110,11 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         // GET: TaiKhoans/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var taiKhoan = await _context.TaiKhoan
                 .FirstOrDefaultAsync(m => m.TenDangNhap == id);
-            if (taiKhoan == null)
-            {
-                return NotFound();
-            }
+            if (taiKhoan == null) return NotFound();
 
             return View(taiKhoan);
         }
@@ -143,9 +128,8 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
             if (taiKhoan != null)
             {
                 _context.TaiKhoan.Remove(taiKhoan);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

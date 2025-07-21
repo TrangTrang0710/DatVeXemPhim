@@ -43,17 +43,29 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Data
                 if (!context.NguoiDung.Any())
                 {
                     var nguoiDungList = new List<NguoiDung>
-                    {
-                        new NguoiDung{MaNguoiDung = "ND01",HoTen = "Nguyễn Gia Huy",Email = "huy246@gmail.com",SDT = "0901234567"},
-                        new NguoiDung{MaNguoiDung = "ND02",HoTen = "Trần Thị Loan",Email = "loantran@gmail.com", SDT = "0912345678"},
-                        new NguoiDung{MaNguoiDung = "ND03",HoTen = "Lê Văn An",Email = "vanan@gmail.com",SDT = "0923456789"},
-                        new NguoiDung{MaNguoiDung = "ND04",HoTen = "Nguyễn An Hải Đường",Email = "haiduong707@gmail.com", SDT = "0934567890" },
-                        new NguoiDung{MaNguoiDung = "ND05",HoTen = "Hoàng Phương Hải Chi ", Email = "haichi0710@gmail.com", SDT = "0923456366" },
-                        new NguoiDung{MaNguoiDung = "ND06",HoTen = "Nguyễn Hoàng Nhật Minh ", Email = "minhnguyen113@gmail.com", SDT = "0324567890" }
-                    };
+                 {
+                     new NguoiDung{MaNguoiDung = "ND01",HoTen = "Nguyễn Gia Huy",Email = "huy246@gmail.com",SDT = "0901234567", Role = "KhachHang"},
+                     new NguoiDung{MaNguoiDung = "ND02",HoTen = "Trần Thị Loan",Email = "loantran@gmail.com", SDT = "0912345678", Role = "KhachHang"},
+                     new NguoiDung{MaNguoiDung = "ND03",HoTen = "Lê Văn An",Email = "vanan@gmail.com",SDT = "0923456789", Role = "KhachHang"},
+                     new NguoiDung{MaNguoiDung = "ND04",HoTen = "Nguyễn An Hải Đường",Email = "haiduong707@gmail.com", SDT = "0934567890", Role = "KhachHang" },
+                     new NguoiDung{MaNguoiDung = "ND05",HoTen = "Hoàng Phương Hải Chi", Email = "haichi0710@gmail.com", SDT = "0923456366", Role = "NhanVien" },
+                     new NguoiDung{MaNguoiDung = "ND06",HoTen = "Nguyễn Hoàng Nhật Minh", Email = "minhnguyen113@gmail.com", SDT = "0324567890", Role = "NhanVien" }
+                 };
+
                     context.NguoiDung.AddRange(nguoiDungList);
                     context.SaveChanges();
+
+                    // Thêm tài khoản tương ứng cho 2 nhân viên
+                    var taiKhoanList = new List<TaiKhoan>
+                    {
+                        new TaiKhoan { TenDangNhap = "nhanvien1", MatKhau = "123456", VaiTro = "NhanVien", TrangThaiTK = "Hoạt động", MaNguoiDung = "ND05" },
+                        new TaiKhoan { TenDangNhap = "nhanvien2", MatKhau = "123456", VaiTro = "NhanVien", TrangThaiTK = "Hoạt động", MaNguoiDung = "ND06" }
+                    };
+
+                    context.TaiKhoan.AddRange(taiKhoanList);
+                    context.SaveChanges();
                 }
+
                 if (!context.Ve.Any())
                 {
                     var veList = new List<Ve>

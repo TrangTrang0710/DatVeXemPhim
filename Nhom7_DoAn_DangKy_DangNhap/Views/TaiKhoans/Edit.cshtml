@@ -6,29 +6,46 @@
 
 <h1>Edit</h1>
 
-<h4>TaiKhoan</h4>
+<h4>Tài khoản</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="TenDangNhap" />
+
             <div class="form-group">
                 <label asp-for="MatKhau" class="control-label"></label>
                 <input asp-for="MatKhau" class="form-control" />
                 <span asp-validation-for="MatKhau" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="VaiTro" class="control-label"></label>
-                <input asp-for="VaiTro" class="form-control" />
+                <select asp-for="VaiTro" class="form-control">
+                    <option value="Admin">Admin</option>
+                    <option value="KhachHang">Khách hàng</option>
+                </select>
                 <span asp-validation-for="VaiTro" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="TrangThaiTK" class="control-label"></label>
-                <input asp-for="TrangThaiTK" class="form-control" />
+                <select asp-for="TrangThaiTK" class="form-control">
+                    <option value="Hoạt động">Hoạt động</option>
+                    <option value="Đã khóa">Đã khóa</option>
+                </select>
                 <span asp-validation-for="TrangThaiTK" class="text-danger"></span>
             </div>
+
+            <!-- ✅ THÊM TRƯỜNG MA NGUOI DUNG -->
             <div class="form-group">
+                <label asp-for="MaNguoiDung" class="control-label"></label>
+                <select asp-for="MaNguoiDung" class="form-control" asp-items="ViewBag.MaNguoiDung"></select>
+                <span asp-validation-for="MaNguoiDung" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -40,5 +57,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

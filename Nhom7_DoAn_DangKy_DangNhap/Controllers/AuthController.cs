@@ -68,31 +68,56 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 ViewBag.ThongBao = TempData["ThongBao"];
             return View();
         }
-
         [HttpPost]
-        public async Task<IActionResult> DangNhap(string tenDangNhap, string matKhau, string? returnUrl)
+        public async Task<IActionResult> DangNhap(string tenDangNhap, string matKhau)
         {
-            var user = _context.TaiKhoan
-                .FirstOrDefault(t => t.TenDangNhap == tenDangNhap && t.MatKhau == matKhau);
-
-            if (user == null)
+            if (string.IsNullOrEmpty(tenDangNhap) || string.IsNullOrEmpty(matKhau))
             {
-                ViewBag.ThongBao = "❌ Sai tên đăng nhập hoặc mật khẩu.";
+                ViewBag.ThongBao = "Vui lòng điền đầy đủ thông tin.";
                 return View();
             }
 
-            var claims = new List<Claim>
+            var taiKhoan = _context.TaiKhoan
+                .FirstOrDefault(x => x.TenDangNhap == tenDangNhap && x.MatKhau == matKhau);
+
+            if (taiKhoan != null)
             {
-                new Claim(ClaimTypes.Name, user.TenDangNhap),
-                new Claim(ClaimTypes.NameIdentifier, user.MaNguoiDung)
-            };
+                // ✅ Lưu Session (nếu cần)
+                HttpContext.Session.SetString("VaiTro", taiKhoan.VaiTro);
+                HttpContext.Session.SetString("TenDangNhap", taiKhoan.TenDangNhap);
 
-            var identity = new ClaimsIdentity(claims, "Cookies");
-            var principal = new ClaimsPrincipal(identity);
+                // ✅ Thêm Cookie Authentication
+                var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, taiKhoan.TenDangNhap),
+            new Claim(ClaimTypes.NameIdentifier, taiKhoan.MaNguoiDung),
+            new Claim(ClaimTypes.Role, taiKhoan.VaiTro)
+        };
 
-            await HttpContext.SignInAsync("Cookies", principal);
+                var identity = new ClaimsIdentity(claims, "Cookies");
+                var principal = new ClaimsPrincipal(identity);
 
-            return Redirect(returnUrl ?? "/");
+                await HttpContext.SignInAsync("Cookies", principal);
+
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ViewBag.ThongBao = "Thông tin đăng nhập không đúng.";
+                return View();
+            }
+        
         }
+
+        public async Task<IActionResult> DangXuat()
+        {
+            // Xoá session khi đăng xuất
+            HttpContext.Session.Clear();
+            await HttpContext.SignOutAsync("Cookies");
+            // Chuyển hướng về trang đăng nhập hoặc trang chủ
+            TempData["ThongBao"] = "✅ Đã đăng xuất thành công.";
+            return RedirectToAction("Index", "Home");
+        }
+
     }
 }

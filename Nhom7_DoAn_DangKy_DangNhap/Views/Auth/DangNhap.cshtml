@@ -1,31 +1,44 @@
-﻿@{
+﻿@model Nhom7_DoAn_DangKy_DangNhap.Models.TaiKhoan
+
+@{
     ViewData["Title"] = "Đăng Nhập";
 }
 
 <h2 class="text-center text-primary mb-4">Đăng Nhập</h2>
 
-<form asp-action="DangNhap" method="post" class="container" style="max-width: 400px;">
+<form asp-action="DangNhap" asp-controller="Auth" method="post" class="container" style="max-width: 400px;">
     <div class="mb-3">
-        <label for="TenDangNhap" class="form-label">Tên đăng nhập</label>
-        <input name="TenDangNhap" id="TenDangNhap" class="form-control" placeholder="Nhập tên đăng nhập" required />
+        <label asp-for="TenDangNhap" class="form-label">Tên đăng nhập</label>
+        <input asp-for="TenDangNhap" class="form-control" placeholder="Nhập tên đăng nhập" />
+        <span asp-validation-for="TenDangNhap" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label for="MatKhau" class="form-label">Mật khẩu</label>
-        <input name="MatKhau" id="MatKhau" type="password" class="form-control" placeholder="Nhập mật khẩu" required />
+        <label asp-for="MatKhau" class="form-label">Mật khẩu</label>
+        <input asp-for="MatKhau" type="password" class="form-control" placeholder="Nhập mật khẩu" />
+        <span asp-validation-for="MatKhau" class="text-danger"></span>
     </div>
 
     <div class="text-center">
         <button type="submit" class="btn btn-primary w-100">Đăng Nhập</button>
     </div>
 
-    @if (!string.IsNullOrEmpty(ViewBag.ThongBao))
+    @if (ViewBag.ThongBao != null)
     {
-        <p class="text-danger text-center mt-2">@ViewBag.ThongBao</p>
+        <div class="alert alert-danger text-center mt-3" role="alert">
+            @ViewBag.ThongBao
+        </div>
     }
 </form>
 
 <div class="text-center mt-3">
-    <p>Chưa có tài khoản? <a asp-action="DangKy" class="text-decoration-none">Đăng ký tại đây</a></p>
-    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại trang chủ</a>
+    <p>
+        Chưa có tài khoản?
+        <a asp-action="DangKy" asp-controller="Auth" class="text-decoration-none fw-bold">Đăng ký tại đây</a>
+    </p>
+    <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary mt-2">Quay lại trang chủ</a>
 </div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

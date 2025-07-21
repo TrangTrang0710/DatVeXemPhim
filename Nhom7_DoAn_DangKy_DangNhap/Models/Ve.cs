@@ -24,5 +24,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Models
 
         [ForeignKey("TenGhe, MaPhongChieu")]
         public Ghe? Ghe { get; set; }
+        
+
     }
 }

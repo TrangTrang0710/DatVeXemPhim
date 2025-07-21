@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Nhom7_DoAn_DangKy_DangNhap.Models.NguoiDung>
+
+<div class="container">
+    <!-- Nút quay về trang chủ -->
+    <div class="mb-3">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">← Quay về trang chủ</a>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">📋 Quản lý Người Dùng</h2>
+        <a asp-action="Create" class="btn btn-outline-primary">
+            ➕ Thêm người dùng
+        </a>
+    </div>
+
+    <table class="table table-striped table-hover shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>👤 Họ Tên</th>
+                <th>📧 Email</th>
+                <th>📱 SĐT</th>
+                <th>👨‍💻 Tài khoản</th>
+                <th>🔐 Trạng thái</th>
+                <th class="text-center">⚙️ Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.HoTen</td>
+                    <td>@item.Email</td>
+                    <td>@item.SDT</td>
+                    <td>@item.TaiKhoan?.TenDangNhap</td>
+                    <td>
+                        @if (item.TaiKhoan?.TrangThaiTK == "Khoa")
+                        {
+                            <span class="text-danger">🔒 Đã khóa</span>
+                        }
+                        else
+                        {
+                            <span class="text-success">✅ Bình thường</span>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (item.TaiKhoan?.TrangThaiTK == "Khoa")
+                        {
+                            <form asp-action="MoKhoaTaiKhoan" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@item.MaNguoiDung" />
+                                <button type="submit" class="btn btn-sm btn-success">Mở khóa</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-action="KhoaTaiKhoan" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@item.MaNguoiDung" />
+                                <button type="submit" class="btn btn-sm btn-danger">Khóa</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

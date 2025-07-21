@@ -160,5 +160,65 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         {
             return _context.NguoiDung.Any(e => e.MaNguoiDung == id);
         }
+        // Trang quản lý người dùng (chỉ Admin  hoặc nhân viên vào được)
+        public async Task<IActionResult> QLNguoiDung()
+        {
+            var vaiTro = HttpContext.Session.GetString("VaiTro");
+
+            if (vaiTro != "Admin" && vaiTro != "NhanVien")
+            {
+                return RedirectToAction("Index", "Home"); // Hoặc trang báo lỗi quyền
+            }
+
+            var dsNguoiDung = await _context.NguoiDung.Include(n => n.TaiKhoan).ToListAsync();
+            return View(dsNguoiDung);
+        }
+
+        // KHÓA tài khoản
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> KhoaTaiKhoan(string id)
+        {
+            if (HttpContext.Session.GetString("VaiTro") != "Admin")
+            {
+                return RedirectToAction("DangNhap", "TaiKhoan");
+            }
+
+            var nguoiDung = await _context.NguoiDung
+                .Include(nd => nd.TaiKhoan)
+                .FirstOrDefaultAsync(nd => nd.MaNguoiDung == id);
+
+            if (nguoiDung != null && nguoiDung.TaiKhoan != null)
+            {
+                nguoiDung.TaiKhoan.TrangThaiTK = "Khoa";
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("QLNguoiDung");
+        }
+
+        // MỞ KHÓA tài khoản
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MoKhoaTaiKhoan(string id)
+        {
+            if (HttpContext.Session.GetString("VaiTro") != "Admin")
+            {
+                return RedirectToAction("DangNhap", "TaiKhoan");
+            }
+
+            var nguoiDung = await _context.NguoiDung
+                .Include(nd => nd.TaiKhoan)
+                .FirstOrDefaultAsync(nd => nd.MaNguoiDung == id);
+
+            if (nguoiDung != null && nguoiDung.TaiKhoan != null)
+            {
+                nguoiDung.TaiKhoan.TrangThaiTK = "Mo";
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("QLNguoiDung");
+        }
+
     }
 }
