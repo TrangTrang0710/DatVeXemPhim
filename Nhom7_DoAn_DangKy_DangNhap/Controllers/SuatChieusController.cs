@@ -10,6 +10,7 @@ using Nhom7_DoAn_DangKy_DangNhap.Models;
 
 namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
 {
+    
     public class SuatChieusController : Controller
     {
         private readonly Nhom7_DoAn_DangKy_DangNhapContext _context;
@@ -23,7 +24,10 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         public async Task<IActionResult> Index()
         {
             var nhom7_DoAn_DangKy_DangNhapContext = _context.SuatChieu.Include(s => s.Phim).Include(s => s.PhongChieu);
-            return View(await nhom7_DoAn_DangKy_DangNhapContext.ToListAsync());
+            var suatChieuList = _context.SuatChieu
+           .Include(s => s.Phim)
+           .Include(s => s.PhongChieu);
+            return View(await suatChieuList.ToListAsync());
         }
 
         // GET: SuatChieus/Details/5

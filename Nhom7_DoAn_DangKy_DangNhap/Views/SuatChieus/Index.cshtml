@@ -1,16 +1,16 @@
 ﻿@model IEnumerable<Nhom7_DoAn_DangKy_DangNhap.Models.SuatChieu>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Quản Lý Suất Chiếu";
 }
 
-<h1>Index</h1>
+<h1>Quản Lý Suất Chiếu</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Thêm Suất Chiếu Mới</a>
 </p>
-<table class="table">
-    <thead>
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.ThoiGianChieu)
@@ -51,3 +51,6 @@
 }
     </tbody>
 </table>
+<div class="text-end mt-3">
+    <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">🏠 Quay về Trang Chủ</a>
+</div>
