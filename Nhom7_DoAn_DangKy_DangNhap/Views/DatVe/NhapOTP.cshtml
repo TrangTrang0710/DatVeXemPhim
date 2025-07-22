@@ -1,15 +1,31 @@
 ﻿@{
-    ViewBag.Title = "Nhập mã OTP";
+    ViewBag.Title = "Xác nhận mã OTP";
+    var suat = ViewBag.Suat as Nhom7_DoAn_DangKy_DangNhap.Models.SuatChieu;
+    var ghe = ViewBag.GheDaChon as string[] ?? new string[0];
+    var tongTien = ghe.Length * 45000;
 }
-<h3>Nhập mã OTP đã gửi về email</h3>
-<form method="post" action="/DatVe/XacNhanOTP">
-    <div class="mb-3">
-        <label>Nhập mã OTP:</label>
-        <input type="text" name="maOTP" class="form-control" required />
-    </div>
-    <button type="submit" class="btn btn-success">Xác nhận</button>
-</form>
-@if (ViewBag.ThongBao != null)
-{
-    <p class="text-danger">@ViewBag.ThongBao</p>
-}
+
+<h2 class="text-center text-primary mb-3">🔐 Xác nhận mã OTP</h2>
+
+<div class="card p-4 shadow-sm">
+
+    <p><strong>Phim:</strong> @suat?.Phim?.TenPhim</p>
+    <p><strong>Ngày chiếu:</strong> @suat?.NgayChieu.ToString("dd/MM/yyyy")</p>
+    <p><strong>Giờ chiếu:</strong> @suat?.ThoiGianChieu</p>
+    <p><strong>Ghế:</strong> @(ghe.Any() ? string.Join(", ", ghe) : "Không có")</p>
+    <p><strong>Tổng tiền:</strong> @tongTien.ToString("N0") VNĐ</p>
+
+    @if (ViewBag.Error != null)
+    {
+
+        <div class="alert alert-danger mt-3">@ViewBag.Error</div>
+    }
+
+    <form asp-action="XacNhanOTP" method="post">
+        <div class="form-group">
+            <label>Nhập mã OTP:</label>
+            <input type="text" name="otp" class="form-control" required />
+        </div>
+        <button class="btn btn-primary mt-2">Xác nhận</button>
+    </form>
+</div>

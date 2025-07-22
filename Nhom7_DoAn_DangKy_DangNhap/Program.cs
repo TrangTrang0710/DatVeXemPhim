@@ -30,7 +30,6 @@ builder.Services.AddSession();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<EmailService>();
 
-
 // Thêm MVC
 builder.Services.AddControllersWithViews();
 

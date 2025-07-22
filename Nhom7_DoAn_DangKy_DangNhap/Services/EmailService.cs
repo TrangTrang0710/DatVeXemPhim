@@ -16,33 +16,23 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Services
     {
         private readonly EmailSettings _settings;
 
-        public EmailService(IOptions<EmailSettings> settings)
+        public EmailService(IOptions<EmailSettings> options)
         {
-            _settings = settings.Value;
+            _settings = options.Value;
         }
 
         public async Task SendEmailAsync(string toEmail, string subject, string body)
         {
-            using (var client = new SmtpClient(_settings.SmtpServer, _settings.Port))
+            if (string.IsNullOrEmpty(_settings.SenderEmail))
+                throw new Exception("❌ Lỗi: 'SenderEmail' bị null hoặc rỗng. Vui lòng kiểm tra cấu hình trong appsettings.json");
+            using var smtp = new SmtpClient(_settings.SmtpServer, _settings.Port)
             {
-                client.Credentials = new NetworkCredential(_settings.SenderEmail, _settings.SenderPassword);
-                client.EnableSsl = true;  // Gmail bắt buộc SSL
-                client.UseDefaultCredentials = false; // Bắt buộc false để dùng Credentials
+                Credentials = new NetworkCredential(_settings.SenderEmail, _settings.SenderPassword),
+                EnableSsl = true
+            };
 
-                var message = new MailMessage
-                {
-                    From = new MailAddress(_settings.SenderEmail, "Hệ thống đặt vé"), // Có thể thêm tên gửi
-                    Subject = subject,
-                    Body = body,
-                    IsBodyHtml = true
-                };
-
-                message.To.Add(new MailAddress(toEmail));
-
-                await client.SendMailAsync(message);
-            }
+            var mail = new MailMessage(_settings.SenderEmail, toEmail, subject, body);
+            await smtp.SendMailAsync(mail);
         }
-
     }
 }
-

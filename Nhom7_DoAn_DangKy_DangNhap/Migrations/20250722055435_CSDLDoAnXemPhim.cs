@@ -8,11 +8,18 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 {
     /// <inheritdoc />
-    public partial class CSDLDoAnDatVeXemPhim : Migration
+    public partial class CSDLDoAnXemPhim : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<bool>(
+                name: "IsLocked",
+                table: "TaiKhoan",
+                type: "bit",
+                nullable: false,
+                defaultValue: false);
+
             migrationBuilder.AddColumn<string>(
                 name: "MaNguoiDung",
                 table: "TaiKhoan",
@@ -274,29 +281,29 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                 table: "TaiKhoan",
                 keyColumn: "TenDangNhap",
                 keyValue: "admin1",
-                column: "MaNguoiDung",
-                value: "ND06");
+                columns: new[] { "IsLocked", "MaNguoiDung" },
+                values: new object[] { false, "ND06" });
 
             migrationBuilder.UpdateData(
                 table: "TaiKhoan",
                 keyColumn: "TenDangNhap",
                 keyValue: "admin2",
-                column: "MaNguoiDung",
-                value: "ND05");
+                columns: new[] { "IsLocked", "MaNguoiDung" },
+                values: new object[] { false, "ND05" });
 
             migrationBuilder.UpdateData(
                 table: "TaiKhoan",
                 keyColumn: "TenDangNhap",
                 keyValue: "use1",
-                column: "MaNguoiDung",
-                value: "ND01");
+                columns: new[] { "IsLocked", "MaNguoiDung" },
+                values: new object[] { false, "ND01" });
 
             migrationBuilder.UpdateData(
                 table: "TaiKhoan",
                 keyColumn: "TenDangNhap",
                 keyValue: "use2",
-                column: "MaNguoiDung",
-                value: "ND04");
+                columns: new[] { "IsLocked", "MaNguoiDung" },
+                values: new object[] { false, "ND04" });
 
             migrationBuilder.InsertData(
                 table: "PhongChieu",
@@ -310,11 +317,11 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
             migrationBuilder.InsertData(
                 table: "TaiKhoan",
-                columns: new[] { "TenDangNhap", "MaNguoiDung", "MatKhau", "TrangThaiTK", "VaiTro" },
+                columns: new[] { "TenDangNhap", "IsLocked", "MaNguoiDung", "MatKhau", "TrangThaiTK", "VaiTro" },
                 values: new object[,]
                 {
-                    { "an789", "ND03", "Pass@789", "Hoạt động", "KhachHang" },
-                    { "loantran456", "ND02", "Pass@456", "Hoạt động", "KhachHang" }
+                    { "an789", false, "ND03", "Pass@789", "Hoạt động", "KhachHang" },
+                    { "loantran456", false, "ND02", "Pass@456", "Hoạt động", "KhachHang" }
                 });
 
             migrationBuilder.InsertData(
@@ -451,6 +458,10 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                 table: "TaiKhoan",
                 keyColumn: "TenDangNhap",
                 keyValue: "loantran456");
+
+            migrationBuilder.DropColumn(
+                name: "IsLocked",
+                table: "TaiKhoan");
 
             migrationBuilder.DropColumn(
                 name: "MaNguoiDung",

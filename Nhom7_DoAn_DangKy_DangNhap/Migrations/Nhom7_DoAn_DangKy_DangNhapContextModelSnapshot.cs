@@ -411,6 +411,9 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("bit");
+
                     b.Property<string>("MaNguoiDung")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -439,6 +442,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                         new
                         {
                             TenDangNhap = "admin1",
+                            IsLocked = false,
                             MaNguoiDung = "ND06",
                             MatKhau = "Admin@123",
                             TrangThaiTK = "Hoạt động",
@@ -447,6 +451,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                         new
                         {
                             TenDangNhap = "use1",
+                            IsLocked = false,
                             MaNguoiDung = "ND01",
                             MatKhau = "User@123",
                             TrangThaiTK = "Hoạt động",
@@ -455,6 +460,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                         new
                         {
                             TenDangNhap = "admin2",
+                            IsLocked = false,
                             MaNguoiDung = "ND05",
                             MatKhau = "Secure456",
                             TrangThaiTK = "Đã khóa",
@@ -463,6 +469,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                         new
                         {
                             TenDangNhap = "use2",
+                            IsLocked = false,
                             MaNguoiDung = "ND04",
                             MatKhau = "User456",
                             TrangThaiTK = "Đã khóa",
@@ -471,6 +478,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                         new
                         {
                             TenDangNhap = "loantran456",
+                            IsLocked = false,
                             MaNguoiDung = "ND02",
                             MatKhau = "Pass@456",
                             TrangThaiTK = "Hoạt động",
@@ -479,6 +487,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                         new
                         {
                             TenDangNhap = "an789",
+                            IsLocked = false,
                             MaNguoiDung = "ND03",
                             MatKhau = "Pass@789",
                             TrangThaiTK = "Hoạt động",

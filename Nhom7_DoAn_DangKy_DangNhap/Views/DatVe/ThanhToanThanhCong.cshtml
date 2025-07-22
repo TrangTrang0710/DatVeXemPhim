@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Thanh toán thành công";
+    Layout = "~/Views/Shared/Layout.cshtml";
+    var veList = ViewBag.DanhSachVe as List<Nhom7_DoAn_DangKy_DangNhap.Models.Ve>;
+    var ngayDat = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+}
+
+<div class="container mt-5 text-center">
+    <div class="alert alert-success shadow-sm p-4 rounded">
+        <h2 class="fw-bold text-success mb-3">🎉 Đặt vé thành công!</h2>
+        <p class="fs-5 text-muted">Cảm ơn bạn đã đặt vé tại <strong>Rạp Phim TX3</strong>.</p>
+    </div>
+
+    @if (veList != null && veList.Count > 0)
+    {
+        var veDaiDien = veList.First();
+        var gioChieu = veDaiDien.SuatChieu.NgayChieu.Add(veDaiDien.SuatChieu.ThoiGianChieu);
+
+        <div class="card mt-4 shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Thông tin vé của bạn</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush text-start">
+                    <li class="list-group-item"><strong>🎬 Phim:</strong> @veDaiDien.SuatChieu?.Phim?.TenPhim</li>
+                    <li class="list-group-item"><strong>🕒 Suất chiếu:</strong> @gioChieu.ToString("dd/MM/yyyy") - @gioChieu.ToString("HH:mm")</li>
+                    <li class="list-group-item"><strong>💺 Ghế:</strong> @string.Join(", ", veList.Select(v => v.TenGhe))</li>
+                    <li class="list-group-item"><strong>📅 Ngày đặt:</strong> @ngayDat</li>
+                    <li class="list-group-item"><strong>💵 Tổng tiền:</strong> @ViewBag.TongTien VNĐ</li>
+                    <li class="list-group-item"><strong>🔑 Mã giao dịch:</strong> @string.Join(" | ", veList.Select(v => v.MaVe))</li>
+                </ul>
+            </div>
+        </div>
+    }
+
+    <div class="mt-4">
+        <a asp-action="Index" asp-controller="Home" class="btn btn-primary me-2">
+            ⬅ Về Trang Chủ
+        </a>
+        <a asp-action="LichSuVe" asp-controller="NguoiDung" class="btn btn-outline-success">
+            📄 Xem Lịch Sử Vé
+        </a>
+    </div>
+</div>

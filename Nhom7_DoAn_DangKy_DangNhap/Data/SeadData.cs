@@ -66,6 +66,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Data
                     context.SaveChanges();
                 }
 
+
                 if (!context.Ve.Any())
                 {
                     var veList = new List<Ve>
