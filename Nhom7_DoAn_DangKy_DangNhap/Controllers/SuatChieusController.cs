@@ -22,26 +22,25 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         // GET: SuatChieus
         public async Task<IActionResult> Index()
         {
-            var nhom7_DoAn_DangKy_DangNhapContext = _context.SuatChieu.Include(s => s.Phim).Include(s => s.PhongChieu);
-            return View(await nhom7_DoAn_DangKy_DangNhapContext.ToListAsync());
+            var suatChieuList = _context.SuatChieu
+                .Include(s => s.Phim)
+                .Include(s => s.PhongChieu);
+
+            return View(await suatChieuList.ToListAsync());
         }
 
         // GET: SuatChieus/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (string.IsNullOrEmpty(id)) return NotFound();
 
             var suatChieu = await _context.SuatChieu
                 .Include(s => s.Phim)
                 .Include(s => s.PhongChieu)
-                .FirstOrDefaultAsync(m => m.MaSuatChieu == id);
-            if (suatChieu == null)
-            {
-                return NotFound();
-            }
+                    .ThenInclude(pc => pc.LoaiPhong)
+                .FirstOrDefaultAsync(s => s.MaSuatChieu == id);
+
+            if (suatChieu == null) return NotFound();
 
             return View(suatChieu);
         }
@@ -49,14 +48,12 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         // GET: SuatChieus/Create
         public IActionResult Create()
         {
-            ViewData["MaPhim"] = new SelectList(_context.Phim, "MaPhim", "MaPhim");
+            ViewData["MaPhim"] = new SelectList(_context.Phim, "MaPhim", "TenPhim");
             ViewData["MaPhongChieu"] = new SelectList(_context.PhongChieu, "MaPhongChieu", "MaPhongChieu");
             return View();
         }
 
         // POST: SuatChieus/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaSuatChieu,MaPhim,MaPhongChieu,ThoiGianChieu,GiaVe")] SuatChieu suatChieu)
@@ -67,7 +64,8 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaPhim"] = new SelectList(_context.Phim, "MaPhim", "MaPhim", suatChieu.MaPhim);
+
+            ViewData["MaPhim"] = new SelectList(_context.Phim, "MaPhim", "TenPhim", suatChieu.MaPhim);
             ViewData["MaPhongChieu"] = new SelectList(_context.PhongChieu, "MaPhongChieu", "MaPhongChieu", suatChieu.MaPhongChieu);
             return View(suatChieu);
         }
@@ -75,32 +73,22 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         // GET: SuatChieus/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (string.IsNullOrEmpty(id)) return NotFound();
 
             var suatChieu = await _context.SuatChieu.FindAsync(id);
-            if (suatChieu == null)
-            {
-                return NotFound();
-            }
-            ViewData["MaPhim"] = new SelectList(_context.Phim, "MaPhim", "MaPhim", suatChieu.MaPhim);
+            if (suatChieu == null) return NotFound();
+
+            ViewData["MaPhim"] = new SelectList(_context.Phim, "MaPhim", "TenPhim", suatChieu.MaPhim);
             ViewData["MaPhongChieu"] = new SelectList(_context.PhongChieu, "MaPhongChieu", "MaPhongChieu", suatChieu.MaPhongChieu);
             return View(suatChieu);
         }
 
         // POST: SuatChieus/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("MaSuatChieu,MaPhim,MaPhongChieu,ThoiGianChieu,GiaVe")] SuatChieu suatChieu)
         {
-            if (id != suatChieu.MaSuatChieu)
-            {
-                return NotFound();
-            }
+            if (id != suatChieu.MaSuatChieu) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -112,17 +100,14 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!SuatChieuExists(suatChieu.MaSuatChieu))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaPhim"] = new SelectList(_context.Phim, "MaPhim", "MaPhim", suatChieu.MaPhim);
+
+            ViewData["MaPhim"] = new SelectList(_context.Phim, "MaPhim", "TenPhim", suatChieu.MaPhim);
             ViewData["MaPhongChieu"] = new SelectList(_context.PhongChieu, "MaPhongChieu", "MaPhongChieu", suatChieu.MaPhongChieu);
             return View(suatChieu);
         }
@@ -130,19 +115,15 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         // GET: SuatChieus/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (string.IsNullOrEmpty(id)) return NotFound();
 
             var suatChieu = await _context.SuatChieu
                 .Include(s => s.Phim)
                 .Include(s => s.PhongChieu)
-                .FirstOrDefaultAsync(m => m.MaSuatChieu == id);
-            if (suatChieu == null)
-            {
-                return NotFound();
-            }
+                    .ThenInclude(pc => pc.LoaiPhong)
+                .FirstOrDefaultAsync(s => s.MaSuatChieu == id);
+
+            if (suatChieu == null) return NotFound();
 
             return View(suatChieu);
         }
@@ -156,15 +137,15 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
             if (suatChieu != null)
             {
                 _context.SuatChieu.Remove(suatChieu);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool SuatChieuExists(string id)
         {
-            return _context.SuatChieu.Any(e => e.MaSuatChieu == id);
+            return _context.SuatChieu.Any(s => s.MaSuatChieu == id);
         }
     }
-}
+    }
+

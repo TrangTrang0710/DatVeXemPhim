@@ -52,15 +52,14 @@
                 <select asp-for="TenDangNhap" class ="form-control" asp-items="ViewBag.TenDangNhap"></select>
             </div>
             <div class="form-group">
-                <label for="Anh">Chọn ảnh phim</label>
-                <select asp-for="Anh" class="form-control">
-                    <option value="/images/phim1.jpg">Phim 1</option>
-                    <option value="/images/phim2.jpg">Phim 2</option>
-                    <option value="/images/phim3.jpg">Phim 3</option>
-                    <option value="/images/phim4.jpg">Phim 4</option>
-                    <option value="/images/phim5.jpg">Phim 5</option>
-                    <option value="/images/phim6.jpg">Phim 6</option>
-                </select>
+                <label asp-for="Anh" class="control-label"></label>
+                <input asp-for="Anh" class="form-control" />
+                <span asp-validation-for="Anh" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TrailerUrl" class="control-label"></label>
+                <input asp-for="TrailerUrl" class="form-control" />
+                <span asp-validation-for="TrailerUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

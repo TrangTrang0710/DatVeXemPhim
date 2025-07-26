@@ -57,11 +57,10 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaPhim,TenPhim,TheLoai,ThoiLuong,MoTa,DaoDien,NgayKhoiChieu,TenDangNhap,Anh")] Phim phim)
+        public async Task<IActionResult> Create([Bind("MaPhim,TenPhim,TheLoai,ThoiLuong,MoTa,DaoDien,NgayKhoiChieu,TenDangNhap,Anh,TrailerUrl")] Phim phim)
         {
             if (ModelState.IsValid)
             {
-
                 _context.Add(phim);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -92,7 +91,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("MaPhim,TenPhim,TheLoai,ThoiLuong,MoTa,DaoDien,NgayKhoiChieu,TenDangNhap")] Phim phim)
+        public async Task<IActionResult> Edit(string id, [Bind("MaPhim,TenPhim,TheLoai,ThoiLuong,MoTa,DaoDien,NgayKhoiChieu,TenDangNhap,Anh,TrailerUrl")] Phim phim)
         {
             if (id != phim.MaPhim)
             {

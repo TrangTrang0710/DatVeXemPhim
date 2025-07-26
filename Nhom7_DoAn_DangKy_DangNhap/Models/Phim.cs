@@ -30,7 +30,8 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Models
         [Display(Name = "Ảnh poster phim")]
         public string Anh { get; set; } = "/images/no-poster.jpg"; // hoặc "" nếu bạn muốn kiểm tra null
 
-        
-        
+
+        public string? TrailerUrl { get; set; } 
+
     }
 }

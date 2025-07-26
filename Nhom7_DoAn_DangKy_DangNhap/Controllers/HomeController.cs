@@ -37,6 +37,20 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
             return View(model);
         }
 
+        public IActionResult Rap() => View("Rap");
+
+public IActionResult LienHe() => View("LienHe");
+
+public IActionResult QuyDinhThanhVien() => View("QuyDinhThanhVien");
+
+public IActionResult DieuKhoan() => View("DieuKhoan");
+
+public IActionResult HuongDanDatVe() => View("HuongDanDatVe");
+
+public IActionResult QuyDinhChung() => View("QuyDinhChung");
+
+public IActionResult ChinhSachBaoMat() => View("ChinhSachBaoMat");
+
         public IActionResult Privacy()
         {
             return View();

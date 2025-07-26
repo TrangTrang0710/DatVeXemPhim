@@ -3,7 +3,6 @@
 }
 @model Nhom7_DoAn_DangKy_DangNhap.Models.TrangChuPhimViewModel
 
-<!-- BOOTSTRAP CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 @{
     Layout = "_Layout";
@@ -11,114 +10,174 @@
 
 <style>
     body {
-        background: radial-gradient(circle at center, #1e1e2f, #0e0e1e);
-        color: white;
+        background-color: #fff;
+        color: #000;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .section-title {
-        color: #ffc107;
-        border-left: 6px solid #ffc107;
-        padding-left: 12px;
-        margin: 40px 0 20px;
         font-size: 28px;
-        font-weight: bold;
+        font-weight: 600;
+        text-align: center;
+        margin: 50px 0 30px;
+        position: relative;
+        color: #00b300;
     }
-    .card-body {
-    padding: 1rem;
-    color: white; /* Thêm dòng này */
-}
+
+        .section-title::after {
+            content: '';
+            width: 120px;
+            height: 4px;
+            background-color: #00b300;
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 5px;
+        }
 
     .card-film {
-        background-color: #1b1b2f;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
         overflow: hidden;
-        transition: transform 0.3s ease-in-out;
+        transition: transform 0.3s;
     }
 
         .card-film:hover {
-            transform: translateY(-5px);
+            transform: translateY(-6px);
         }
 
         .card-film img {
-            height: 300px;
-            object-fit: cover;
+            width: 100%;
+            height: auto; /* <-- Quan trọng để ảnh tự canh theo tỉ lệ */
+            object-fit: contain; /* Giữ nguyên ảnh, không crop */
+            display: block;
+            margin: 0 auto;
+            border-bottom: 1px solid #eee;
+            max-height: 400px; /* Giới hạn nếu ảnh quá dài */
         }
 
+
     .card-body {
+        background-color: #f8f9fa;
         padding: 1rem;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .card-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #000;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-body p {
+        font-size: 14px;
+        margin: 2px 0;
+        color: #333;
+        line-height: 1.4;
+    }
+
+    .card-body .mo-ta {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        font-style: italic;
+        color: #555;
     }
 
     .btn-ve {
-        background-color: #ffc107;
-        color: #000;
-        font-weight: bold;
+        background-color: #00b300;
+        color: white;
+        font-weight: 500;
+        border: none;
+        width: 100%;
+        border-radius: 25px;
+        padding: 8px 16px;
+        transition: background-color 0.3s;
     }
 
         .btn-ve:hover {
-            background-color: #e0a800;
+            background-color: #009900;
         }
 
-    .btn-trailer {
-        border: 1px solid white;
-        color: white;
+    .btn-outline-success {
+        width: 100%;
+        border-radius: 25px;
+        padding: 8px 16px;
     }
 
-        .btn-trailer:hover {
-            background-color: white;
-            color: black;
+    .card-title a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+        .card-title a:hover {
+            color: #00b300;
         }
 </style>
 
 <div class="container py-5">
-
-    <!-- 🔥 Phim Đang Chiếu -->
     <div class="section-title">Phim Đang Chiếu</div>
-    <div class="row row-cols-1 row-cols-md-4 g-4">
+    <div class="row row-cols-1 row-cols-md-5 g-4">
         @foreach (var phim in Model.DangChieu)
         {
             if (phim == null) continue;
-
             var thoiLuongText = phim.ThoiLuong.HasValue ? $"{phim.ThoiLuong} phút" : "Chưa rõ";
             <div class="col">
                 <div class="card card-film h-100">
-                    <img src="/images/@phim.Anh" class="card-img-top" alt="@phim.TenPhim" />
+                    <a asp-controller="Phims" asp-action="Details" asp-route-id="@phim.MaPhim">
+                        <img src="/images/@phim.Anh" alt="@phim.TenPhim" />
+                    </a>
                     <div class="card-body">
-                        <h5 class="card-title">@phim.TenPhim</h5>
+                        <h5 class="card-title">
+                            <a asp-controller="Phims" asp-action="Details" asp-route-id="@phim.MaPhim">
+                                @phim.TenPhim
+                            </a>
+                        </h5>
                         <p><strong>Thể loại:</strong> @phim.TheLoai</p>
                         <p><strong>Thời lượng:</strong> @thoiLuongText</p>
-                        <p>@phim.MoTa</p>
+                        <p class="mo-ta">@phim.MoTa</p>
                     </div>
-                    <div class="card-footer d-flex justify-content-between p-3">
+                    <div class="card-footer bg-white border-0 p-3">
                         <a href="/DatVe/ChonSuatChieu?maPhim=@phim.MaPhim" class="btn btn-ve">Đặt vé</a>
-
                     </div>
                 </div>
             </div>
         }
     </div>
 
-    <!-- 🍿 Phim Sắp Chiếu -->
     <div class="section-title">Phim Sắp Chiếu</div>
-    <div class="row row-cols-1 row-cols-md-4 g-4">
+    <div class="row row-cols-1 row-cols-md-5 g-4">
         @foreach (var phim in Model.SapChieu)
         {
             if (phim == null) continue;
-
             var thoiLuongText = phim.ThoiLuong.HasValue ? $"{phim.ThoiLuong} phút" : "Chưa rõ";
             var ngayKhoiChieuText = phim.NgayKhoiChieu.HasValue ? phim.NgayKhoiChieu.Value.ToString("dd/MM/yyyy") : "Chưa rõ";
             <div class="col">
                 <div class="card card-film h-100">
-                    <img src="/images/@phim.Anh" class="card-img-top" alt="@phim.TenPhim" />
+                    <a asp-controller="Phims" asp-action="Details" asp-route-id="@phim.MaPhim">
+                        <img src="/images/@phim.Anh" alt="@phim.TenPhim" />
+                    </a>
                     <div class="card-body">
-                        <h5 class="card-title">@phim.TenPhim</h5>
+                        <h5 class="card-title">
+                            <a asp-controller="Phims" asp-action="Details" asp-route-id="@phim.MaPhim">
+                                @phim.TenPhim
+                            </a>
+                        </h5>
                         <p><strong>Khởi chiếu:</strong> @ngayKhoiChieuText</p>
                         <p><strong>Thể loại:</strong> @phim.TheLoai</p>
                         <p><strong>Thời lượng:</strong> @thoiLuongText</p>
-                        <p>@phim.MoTa</p>
+                        <p class="mo-ta">@phim.MoTa</p>
                     </div>
-                    <div class="card-footer d-flex justify-content-between p-3">
-                        <a href="#" class="btn btn-info">Tìm hiểu</a>
+                    <div class="card-footer bg-white border-0 p-3">
+                        <a asp-controller="Phims" asp-action="Details" asp-route-id="@phim.MaPhim" class="btn btn-outline-success">Tìm hiểu</a>
                     </div>
                 </div>
             </div>

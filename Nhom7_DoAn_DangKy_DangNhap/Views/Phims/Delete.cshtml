@@ -51,7 +51,19 @@
             @Html.DisplayNameFor(model => model.TaiKhoan)
         </dt>
         <dd class = "col-sm-10">
-            @Model.TaiKhoan?.TenDangNhap)
+            @Html.DisplayFor(model => model.TaiKhoan.TenDangNhap)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Anh)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Anh)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TrailerUrl)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TrailerUrl)
         </dd>
     </dl>
     

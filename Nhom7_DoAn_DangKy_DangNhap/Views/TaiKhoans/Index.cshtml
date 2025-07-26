@@ -29,7 +29,7 @@
                 {
                     <tr>
                         <td>@item.TenDangNhap</td>
-                        <td>@item.MatKhau</td>
+                        <td>@(new string('*', item.MatKhau.Length))</td>
                         <td>@item.VaiTro</td>
                         <td>
                             @{

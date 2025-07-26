@@ -33,6 +33,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.TaiKhoan)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Anh)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TrailerUrl)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -58,11 +64,14 @@
                 @Html.DisplayFor(modelItem => item.NgayKhoiChieu)
             </td>
             <td>
-                @item.TaiKhoan?.TenDangNhap)
+                @Html.DisplayFor(modelItem => item.TaiKhoan.TenDangNhap)
             </td>
-                <td>
-                    <img src="@item.Anh" alt="Ảnh phim" width="100" />
-                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Anh)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TrailerUrl)
+            </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.MaPhim">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.MaPhim">Details</a> |
