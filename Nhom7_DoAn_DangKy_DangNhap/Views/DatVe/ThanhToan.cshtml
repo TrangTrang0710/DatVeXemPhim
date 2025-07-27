@@ -1,38 +1,55 @@
 ﻿@{
     var suat = ViewBag.Suat as Nhom7_DoAn_DangKy_DangNhap.Models.SuatChieu;
-    var ghe = ViewBag.GheDaChon as string[] ?? new string[0];
-    var tongTien = ghe.Length * 45000;
-    var email = ViewBag.Email as string ?? "";
-    var error = ViewBag.Error as string;
+    var chiTietGhe = ViewBag.ChiTietGhe as List<(string TenGhe, string LoaiGhe, decimal Gia)> ?? new List<(string, string, decimal)>();
+    decimal tongTien = ViewBag.TongTien ?? 0;
 }
 
 <h2 class="text-center text-primary mb-3">Xác nhận thanh toán</h2>
 
 <div class="card p-4 shadow-sm">
+    <p><strong>🎬 Phim:</strong> @suat?.Phim?.TenPhim</p>
+    <p><strong>📅 Ngày chiếu:</strong> @suat?.NgayChieu.ToString("dd/MM/yyyy")</p>
+    <p>
+        <strong>🕒 Giờ chiếu:</strong>
+        @(suat?.ThoiGianChieu is TimeSpan tg ? tg.ToString(@"hh\:mm") : "")
+    </p>
 
-    <p><strong>Phim:</strong> @suat?.Phim?.TenPhim</p>
-    <p><strong>Ngày chiếu:</strong> @suat?.NgayChieu.ToString("dd/MM/yyyy")</p>
-    <p><strong>Giờ chiếu:</strong> @suat?.ThoiGianChieu</p>
-    <p><strong>Ghế:</strong> @(ghe.Any() ? string.Join(", ", ghe) : "Chưa chọn ghế")</p>
-    <p><strong>Tổng tiền:</strong> @tongTien.ToString("N0") VNĐ</p>
-
-    @if (!string.IsNullOrEmpty(error))
+    <h5 class="mt-3">Danh sách ghế:</h5>
+    @if (chiTietGhe.Any())
     {
-        <div class="alert alert-danger">@error</div>
+        <ul class="list-group mb-3">
+            @foreach (var ghe in chiTietGhe)
+            {
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>@ghe.TenGhe (@ghe.LoaiGhe)</span>
+                    <span class="text-success">@ghe.Gia.ToString("N0") VNĐ</span>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p class="text-danger">❌ Không có ghế nào được chọn!</p>
     }
 
-    <form asp-action="XacNhanThanhToan" method="post">
-        @foreach (var g in ghe)
-        {
-            <input type="hidden" name="gheDaChon" value="@g" />
-        }
+    <h4 class="text-end text-danger">💰 Tổng tiền: @tongTien.ToString("N0") VNĐ</h4>
 
+    <!-- ✅ Form nhập email để nhận OTP -->
+    <form asp-action="GuiOTP" method="post">
+        @foreach (var ghe in chiTietGhe)
+        {
+            <input type="hidden" name="gheDaChon" value="@ghe.TenGhe" />
+        }
         <input type="hidden" name="maSuatChieu" value="@suat?.MaSuatChieu" />
+        <input type="hidden" name="tongTien" value="@tongTien" />
 
         <div class="mb-3">
             <label class="form-label">Nhập email để nhận OTP:</label>
-            <input type="email" name="email" value="@ViewBag.Email" class="form-control" required />
+            <input type="email" name="email" class="form-control" placeholder="Nhập email..." required />
         </div>
-        <button type="submit" class="btn btn-success w-100">Gửi OTP</button>
+
+        <button type="submit" class="btn btn-success w-100 mb-2">Gửi OTP</button>
+        <a asp-action="ChonGhe" asp-route-maSuatChieu="@suat?.MaSuatChieu" class="btn btn-secondary w-100">⬅ Quay lại chọn ghế</a>
     </form>
+
 </div>

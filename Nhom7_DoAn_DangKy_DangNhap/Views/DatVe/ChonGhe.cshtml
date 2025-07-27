@@ -4,75 +4,157 @@
     var gheDaDat = ViewBag.GheDaDat as List<string>;
 }
 
-<h2 class="text-center">Chọn ghế - Phim: @suat?.Phim?.TenPhim</h2>
+<div class="container my-4">
+    <h2 class="text-center mb-3">🎬 Chọn ghế cho phim: <strong>@suat?.Phim?.TenPhim</strong></h2>
+    <h5 class="text-center text-muted mb-4">
+        Ngày chiếu: @suat?.NgayChieu.ToString("dd/MM/yyyy") - Giờ chiếu: @suat?.ThoiGianChieu.ToString(@"hh\:mm")
+    </h5>
 
-<form method="post" asp-action="ThanhToanForm" asp-controller="DatVe">
-    <input type="hidden" name="maSuatChieu" value="@suat?.MaSuatChieu" />
+    <form method="post" asp-action="ThanhToan" asp-controller="DatVe">
+        <input type="hidden" name="maSuatChieu" value="@suat?.MaSuatChieu" />
+        
 
-    <div class="text-center my-4">
-        <strong class="screen">--- MÀN HÌNH ---</strong>
-    </div>
+        <div class="text-center mb-4">
+            <div class="screen bg-dark text-white py-2 rounded">--- MÀN HÌNH ---</div>
+        </div>
 
-    <div class="container d-flex flex-column align-items-center">
-        @if (gheTheoHang != null && gheTheoHang.Any())
-        {
-            foreach (var hang in gheTheoHang.OrderBy(h => h.Key))
+        <div class="seat-container">
+            @if (gheTheoHang != null && gheTheoHang.Any())
             {
-                <div class="d-flex align-items-center justify-content-center mb-2">
-                    <span class="me-2" style="width: 40px;"><strong>@hang.Key</strong></span>
-                    @foreach (var ghe in hang.Value.OrderBy(g => int.Parse(g.TenGhe.Substring(1))))
-                    {
-                        bool isDisabled = gheDaDat != null && gheDaDat.Contains(ghe.TenGhe);
-                        string baseClass = ghe.MaLoaiGhe switch
+                foreach (var hang in gheTheoHang.OrderBy(h => h.Key))
+                {
+                    <div class="seat-row">
+                        <span class="row-label">@hang.Key</span>
+                        @foreach (var ghe in hang.Value)
                         {
-                            "LG02" => "btn-danger",  // VIP
-                            "LG03" => "btn-warning", // Couple
-                            _ => "btn-primary"       // Thường
-                        };
-                        string cssClass = isDisabled ? "btn btn-secondary" : $"btn {baseClass} selectable";
+                            bool isDisabled = gheDaDat != null && gheDaDat.Contains(ghe.TenGhe);
+                            string seatClass = ghe.MaLoaiGhe switch
+                            {
+                                "LG02" => "seat btn-vip",
+                                "LG03" => "seat btn-couple",
+                                _ => "seat btn-normal"
+                            };
+                            if (isDisabled) seatClass += " disabled";
 
-                        <label class="@cssClass m-1 seat-label text-center" style="width: 60px; cursor: pointer;">
-                            <input type="checkbox" name="gheDaChon" value="@ghe.TenGhe" @(isDisabled ? "disabled" : "") hidden />
-                            @ghe.TenGhe
-                        </label>
-                    }
-                </div>
+                            <label class="@seatClass" data-price="@suat!.GiaVe">
+                                <input type="checkbox" value="@ghe.TenGhe" @(isDisabled ? "disabled" : "") />
+                                @ghe.TenGhe
+                            </label>
+                        }
+                    </div>
+                }
             }
-        }
-        else
-        {
-            <p class="text-danger">Không có dữ liệu ghế để hiển thị!</p>
-        }
-    </div>
+            else
+            {
+                <p class="text-danger">Không có dữ liệu ghế để hiển thị!</p>
+            }
+        </div>
 
-    <div class="mt-4 text-center">
-        <span class="btn btn-primary">Ghế thường</span>
-        <span class="btn btn-danger">Ghế VIP</span>
-        <span class="btn btn-warning">Ghế Couple</span>
-        <span class="btn btn-secondary">Đã đặt</span>
-    </div>
+        <div class="mt-4 text-center">
+            <span class="badge bg-primary px-3 py-2">Ghế thường</span>
+            <span class="badge bg-danger px-3 py-2">Ghế VIP</span>
+            <span class="badge bg-warning text-dark px-3 py-2">Ghế Couple</span>
+            <span class="badge bg-secondary px-3 py-2">Đã đặt</span>
+        </div>
 
-    <div class="text-center mt-4">
-        <button type="submit" class="btn btn-success">Tiếp tục thanh toán</button>
-    </div>
-</form>
+        <div class="mt-4 text-center">
+            <h5>Ghế đã chọn: <span id="selectedSeats" class="text-primary fw-bold">0</span></h5>
+            <h5>Tổng tiền: <span id="totalPrice" class="text-success fw-bold">0</span> VNĐ</h5>
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" id="btnContinue" class="btn btn-success px-4" disabled>Tiếp tục thanh toán</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .seat-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .seat-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .row-label {
+        width: 30px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .seat {
+        width: 50px;
+        height: 50px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: white;
+        cursor: pointer;
+    }
+
+        .seat input {
+            display: none;
+        }
+
+    .btn-normal {
+        background-color: #007bff;
+    }
+
+    .btn-vip {
+        background-color: #dc3545;
+    }
+
+    .btn-couple {
+        background-color: #ffc107;
+        color: black;
+    }
+
+    .disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+    }
+</style>
 
 @section Scripts {
     <script>
-        document.querySelectorAll('.selectable').forEach(function (label) {
-            const checkbox = label.querySelector('input[type="checkbox"]');
+        // Gán ghế đã chọn vào nhiều <input name="gheDaChon" value="...">
+        function updateTotal() {
+            let selectedSeats = [];
+            let total = 0;
 
-            label.addEventListener('click', function (e) {
-                e.preventDefault();
+            // Xóa hết input cũ
+            document.querySelectorAll('input[name="gheDaChon"]').forEach(e => e.remove());
 
-                checkbox.checked = !checkbox.checked;
+            document.querySelectorAll('.seat input:checked').forEach(input => {
+                const parent = input.closest('.seat');
+                const price = parseFloat(parent.getAttribute('data-price'));
+                selectedSeats.push(input.value);
+                total += price;
 
-                if (checkbox.checked) {
-                    label.classList.add('bg-light', 'text-dark', 'border', 'border-light', 'opacity-75');
-                } else {
-                    label.classList.remove('bg-light', 'text-dark', 'border', 'border-light', 'opacity-75');
-                }
+                // Tạo input hidden mới cho từng ghế
+                const inputHidden = document.createElement("input");
+                inputHidden.type = "hidden";
+                inputHidden.name = "gheDaChon"; // Quan trọng: dùng name giống trên controller
+                inputHidden.value = input.value;
+                document.querySelector("form").appendChild(inputHidden);
             });
+
+            document.getElementById('selectedSeats').textContent = selectedSeats.join(', ');
+            document.getElementById('totalPrice').textContent = total.toLocaleString();
+            document.getElementById('btnContinue').disabled = selectedSeats.length === 0;
+        }
+
+
+        document.querySelectorAll('.seat input').forEach(input => {
+            input.addEventListener('change', updateTotal);
         });
     </script>
 }

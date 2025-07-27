@@ -38,13 +38,26 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 return View(vm);
             }
 
+            // Sinh mã NDxx tự động
+            string newId = "ND01";
+            var lastNguoiDung = _context.NguoiDung
+                .OrderByDescending(nd => nd.MaNguoiDung)
+                .FirstOrDefault();
+
+            if (lastNguoiDung != null)
+            {
+                int num = int.Parse(lastNguoiDung.MaNguoiDung.Substring(2)) + 1;
+                newId = "ND" + num.ToString("D2");
+            }
+
             var nguoiDung = new NguoiDung
             {
-                MaNguoiDung = Guid.NewGuid().ToString(),
+                MaNguoiDung = newId,
                 HoTen = vm.HoTen,
                 Email = vm.Email,
                 SDT = vm.SDT
             };
+
 
             var taiKhoan = new TaiKhoan
             {
@@ -52,7 +65,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 MatKhau = vm.MatKhau,
                 VaiTro = "KhachHang",
                 IsLocked = false,
-                MaNguoiDung = nguoiDung.MaNguoiDung,
+                MaNguoiDung = newId,
                 TrangThaiTK = "Đang hoạt động"
             };
 
@@ -63,17 +76,13 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
             TempData["ThongBao"] = "✅ Đăng ký thành công. Vui lòng đăng nhập.";
             return RedirectToAction("DangNhap");
         }
-
-        // ====================== ĐĂNG NHẬP ======================
         [HttpGet]
         public IActionResult DangNhap()
         {
-            if (TempData["ThongBao"] != null)
-                ViewBag.ThongBao = TempData["ThongBao"];
             return View();
         }
 
-
+        // ====================== ĐĂNG NHẬP ======================
         [HttpPost]
         public IActionResult DangNhap(string tenDangNhap, string matKhau)
         {
@@ -83,33 +92,67 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 return View();
             }
 
-            // Đăng nhập admin tạm thời
-            if (tenDangNhap == "admin" && matKhau == "1234")
+            var taiKhoan = _context.TaiKhoan.FirstOrDefault(x => x.TenDangNhap == tenDangNhap);
+
+            if (taiKhoan == null)
             {
-                HttpContext.Session.SetString("VaiTro", "Admin");
-                HttpContext.Session.SetString("TenDangNhap", "admin");
-                return RedirectToAction("Index", "Home");
+                ViewBag.ThongBao = "Tên đăng nhập không tồn tại.";
+                return View();
             }
 
-            var taiKhoan = _context.TaiKhoan.FirstOrDefault(x => x.TenDangNhap == tenDangNhap && x.MatKhau == matKhau);
-
-            if (taiKhoan != null)
+            // ✅ Kiểm tra tài khoản bị khóa
+            if (taiKhoan.IsLocked)
             {
-                if (taiKhoan.TrangThaiTK.ToLower() == "đã khóa")
+                if (taiKhoan.ThoiGianKhoa.HasValue && DateTime.Now < taiKhoan.ThoiGianKhoa.Value.AddMinutes(15))
                 {
-                    ViewBag.ThongBao = "⚠️ Tài khoản của bạn đã bị khóa.";
+                    var thoiGianConLai = taiKhoan.ThoiGianKhoa.Value.AddMinutes(15) - DateTime.Now;
+                    ViewBag.ThongBao = $"⚠️ Tài khoản bị khóa. Vui lòng thử lại sau {thoiGianConLai.Minutes} phút {thoiGianConLai.Seconds} giây.";
                     return View();
                 }
+                else
+                {
+                    // ✅ Hết thời gian khóa → mở khóa
+                    taiKhoan.IsLocked = false;
+                    taiKhoan.SoLanDangNhapSai = 0;
+                    taiKhoan.ThoiGianKhoa = null;
+                }
+            }
+
+            // ✅ Kiểm tra mật khẩu
+            if (taiKhoan.MatKhau == matKhau)
+            {
+                // Đăng nhập thành công → reset đếm sai
+                taiKhoan.SoLanDangNhapSai = 0;
+                _context.SaveChanges();
 
                 HttpContext.Session.SetString("VaiTro", taiKhoan.VaiTro);
                 HttpContext.Session.SetString("TenDangNhap", taiKhoan.TenDangNhap);
                 HttpContext.Session.SetString("MaNguoiDung", taiKhoan.MaNguoiDung);
+
                 return RedirectToAction("Index", "Home");
             }
+            else
+            {
+                // Sai mật khẩu → tăng số lần sai
+                taiKhoan.SoLanDangNhapSai += 1;
 
-            ViewBag.ThongBao = "Thông tin đăng nhập không đúng.";
-            return View();
+                if (taiKhoan.SoLanDangNhapSai >= 5)
+                {
+                    taiKhoan.IsLocked = true;
+
+                    taiKhoan.ThoiGianKhoa = DateTime.Now;
+                    _context.SaveChanges();
+
+                    ViewBag.ThongBao = "⚠️ Tài khoản của bạn đã bị khóa 15 phút do nhập sai quá nhiều lần.";
+                    return View();
+                }
+
+                _context.SaveChanges();
+                ViewBag.ThongBao = $"Sai mật khẩu. Bạn còn {5 - taiKhoan.SoLanDangNhapSai} lần thử.";
+                return View();
+            }
         }
+
 
         // ====================== ĐĂNG XUẤT ======================
         public IActionResult DangXuat()

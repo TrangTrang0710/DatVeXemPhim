@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 {
     /// <inheritdoc />
-    public partial class CSDLDoAnXemPhim : Migration
+    public partial class CSDLVeXemPhim : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,6 +26,19 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                 type: "nvarchar(450)",
                 nullable: false,
                 defaultValue: "");
+
+            migrationBuilder.AddColumn<int>(
+                name: "SoLanDangNhapSai",
+                table: "TaiKhoan",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "ThoiGianKhoa",
+                table: "TaiKhoan",
+                type: "datetime2",
+                nullable: true);
 
             migrationBuilder.CreateTable(
                 name: "LoaiGhe",
@@ -246,9 +259,9 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                 columns: new[] { "MaLoaiPhong", "SoLuongGhe" },
                 values: new object[,]
                 {
-                    { "Couple", 40 },
-                    { "Thuong", 80 },
-                    { "VIP", 40 }
+                    { "LP01", 80 },
+                    { "LP02", 40 },
+                    { "LP03", 40 }
                 });
 
             migrationBuilder.InsertData(
@@ -281,47 +294,47 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                 table: "TaiKhoan",
                 keyColumn: "TenDangNhap",
                 keyValue: "admin1",
-                columns: new[] { "IsLocked", "MaNguoiDung" },
-                values: new object[] { false, "ND06" });
+                columns: new[] { "IsLocked", "MaNguoiDung", "SoLanDangNhapSai", "ThoiGianKhoa" },
+                values: new object[] { false, "ND06", 0, null });
 
             migrationBuilder.UpdateData(
                 table: "TaiKhoan",
                 keyColumn: "TenDangNhap",
                 keyValue: "admin2",
-                columns: new[] { "IsLocked", "MaNguoiDung" },
-                values: new object[] { false, "ND05" });
+                columns: new[] { "IsLocked", "MaNguoiDung", "SoLanDangNhapSai", "ThoiGianKhoa" },
+                values: new object[] { false, "ND05", 0, null });
 
             migrationBuilder.UpdateData(
                 table: "TaiKhoan",
                 keyColumn: "TenDangNhap",
                 keyValue: "use1",
-                columns: new[] { "IsLocked", "MaNguoiDung" },
-                values: new object[] { false, "ND01" });
+                columns: new[] { "IsLocked", "MaNguoiDung", "SoLanDangNhapSai", "ThoiGianKhoa" },
+                values: new object[] { false, "ND01", 0, null });
 
             migrationBuilder.UpdateData(
                 table: "TaiKhoan",
                 keyColumn: "TenDangNhap",
                 keyValue: "use2",
-                columns: new[] { "IsLocked", "MaNguoiDung" },
-                values: new object[] { false, "ND04" });
+                columns: new[] { "IsLocked", "MaNguoiDung", "SoLanDangNhapSai", "ThoiGianKhoa" },
+                values: new object[] { false, "ND04", 0, null });
 
             migrationBuilder.InsertData(
                 table: "PhongChieu",
                 columns: new[] { "MaPhongChieu", "MaLoaiPhong", "TenPhong" },
                 values: new object[,]
                 {
-                    { "PC01", "Thuong", "Phòng 1" },
-                    { "PC02", "VIP", "Phòng 2" },
-                    { "PC03", "Couple", "Phòng 3" }
+                    { "PC1", "LP01", "Phòng 1 (Thường)" },
+                    { "PC2", "LP02", "Phòng 2 (VIP)" },
+                    { "PC3", "LP03", "Phòng 3 (Couple)" }
                 });
 
             migrationBuilder.InsertData(
                 table: "TaiKhoan",
-                columns: new[] { "TenDangNhap", "IsLocked", "MaNguoiDung", "MatKhau", "TrangThaiTK", "VaiTro" },
+                columns: new[] { "TenDangNhap", "IsLocked", "MaNguoiDung", "MatKhau", "SoLanDangNhapSai", "ThoiGianKhoa", "TrangThaiTK", "VaiTro" },
                 values: new object[,]
                 {
-                    { "an789", false, "ND03", "Pass@789", "Hoạt động", "KhachHang" },
-                    { "loantran456", false, "ND02", "Pass@456", "Hoạt động", "KhachHang" }
+                    { "an789", false, "ND03", "Pass@789", 0, null, "Hoạt động", "KhachHang" },
+                    { "loantran456", false, "ND02", "Pass@456", 0, null, "Hoạt động", "KhachHang" }
                 });
 
             migrationBuilder.InsertData(
@@ -329,11 +342,132 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
                 columns: new[] { "MaSuatChieu", "GiaVe", "MaPhim", "MaPhongChieu", "NgayChieu", "ThoiGianChieu" },
                 values: new object[,]
                 {
-                    { "SC01", 120000.00m, "P01", "PC01", new DateTime(2025, 7, 23, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
-                    { "SC02", 120000.00m, "P02", "PC01", new DateTime(2025, 7, 24, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 21, 0, 0, 0) },
-                    { "SC03", 150000.00m, "P03", "PC02", new DateTime(2025, 7, 25, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 21, 0, 0, 0) },
-                    { "SC04", 200000.00m, "P04", "PC03", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
-                    { "SC05", 120000.00m, "P06", "PC01", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) }
+                    { "SC1", 100000m, "P01", "PC1", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC10", 140000m, "P05", "PC2", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC100", 140000m, "P05", "PC2", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC101", 200000m, "P01", "PC2", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC102", 150000m, "P02", "PC2", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC103", 100000m, "P03", "PC3", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC104", 120000m, "P04", "PC3", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC105", 160000m, "P05", "PC3", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC106", 140000m, "P01", "PC3", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC107", 200000m, "P02", "PC3", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC108", 150000m, "P03", "PC3", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC109", 100000m, "P04", "PC1", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC11", 200000m, "P01", "PC2", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC110", 120000m, "P05", "PC1", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC111", 160000m, "P01", "PC1", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC112", 140000m, "P02", "PC1", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC113", 200000m, "P03", "PC1", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC114", 150000m, "P04", "PC1", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC115", 100000m, "P05", "PC2", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC116", 120000m, "P01", "PC2", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC117", 160000m, "P02", "PC2", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC118", 140000m, "P03", "PC2", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC119", 200000m, "P04", "PC2", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC12", 150000m, "P02", "PC2", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC120", 150000m, "P05", "PC2", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC121", 100000m, "P01", "PC3", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC122", 120000m, "P02", "PC3", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC123", 160000m, "P03", "PC3", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC124", 140000m, "P04", "PC3", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC125", 200000m, "P05", "PC3", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC126", 150000m, "P01", "PC3", new DateTime(2025, 8, 2, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC13", 100000m, "P03", "PC3", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC14", 120000m, "P04", "PC3", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC15", 160000m, "P05", "PC3", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC16", 140000m, "P01", "PC3", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC17", 200000m, "P02", "PC3", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC18", 150000m, "P03", "PC3", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC19", 100000m, "P04", "PC1", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC2", 120000m, "P02", "PC1", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC20", 120000m, "P05", "PC1", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC21", 160000m, "P01", "PC1", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC22", 140000m, "P02", "PC1", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC23", 200000m, "P03", "PC1", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC24", 150000m, "P04", "PC1", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC25", 100000m, "P05", "PC2", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC26", 120000m, "P01", "PC2", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC27", 160000m, "P02", "PC2", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC28", 140000m, "P03", "PC2", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC29", 200000m, "P04", "PC2", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC3", 160000m, "P03", "PC1", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC30", 150000m, "P05", "PC2", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC31", 100000m, "P01", "PC3", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC32", 120000m, "P02", "PC3", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC33", 160000m, "P03", "PC3", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC34", 140000m, "P04", "PC3", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC35", 200000m, "P05", "PC3", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC36", 150000m, "P01", "PC3", new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC37", 100000m, "P02", "PC1", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC38", 120000m, "P03", "PC1", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC39", 160000m, "P04", "PC1", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC4", 140000m, "P04", "PC1", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC40", 140000m, "P05", "PC1", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC41", 200000m, "P01", "PC1", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC42", 150000m, "P02", "PC1", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC43", 100000m, "P03", "PC2", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC44", 120000m, "P04", "PC2", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC45", 160000m, "P05", "PC2", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC46", 140000m, "P01", "PC2", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC47", 200000m, "P02", "PC2", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC48", 150000m, "P03", "PC2", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC49", 100000m, "P04", "PC3", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC5", 200000m, "P05", "PC1", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC50", 120000m, "P05", "PC3", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC51", 160000m, "P01", "PC3", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC52", 140000m, "P02", "PC3", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC53", 200000m, "P03", "PC3", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC54", 150000m, "P04", "PC3", new DateTime(2025, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC55", 100000m, "P05", "PC1", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC56", 120000m, "P01", "PC1", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC57", 160000m, "P02", "PC1", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC58", 140000m, "P03", "PC1", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC59", 200000m, "P04", "PC1", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC6", 150000m, "P01", "PC1", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC60", 150000m, "P05", "PC1", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC61", 100000m, "P01", "PC2", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC62", 120000m, "P02", "PC2", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC63", 160000m, "P03", "PC2", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC64", 140000m, "P04", "PC2", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC65", 200000m, "P05", "PC2", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC66", 150000m, "P01", "PC2", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC67", 100000m, "P02", "PC3", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC68", 120000m, "P03", "PC3", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC69", 160000m, "P04", "PC3", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC7", 100000m, "P02", "PC2", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC70", 140000m, "P05", "PC3", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC71", 200000m, "P01", "PC3", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC72", 150000m, "P02", "PC3", new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC73", 100000m, "P03", "PC1", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC74", 120000m, "P04", "PC1", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC75", 160000m, "P05", "PC1", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC76", 140000m, "P01", "PC1", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC77", 200000m, "P02", "PC1", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC78", 150000m, "P03", "PC1", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC79", 100000m, "P04", "PC2", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC8", 120000m, "P03", "PC2", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC80", 120000m, "P05", "PC2", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC81", 160000m, "P01", "PC2", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC82", 140000m, "P02", "PC2", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC83", 200000m, "P03", "PC2", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC84", 150000m, "P04", "PC2", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC85", 100000m, "P05", "PC3", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC86", 120000m, "P01", "PC3", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC87", 160000m, "P02", "PC3", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC88", 140000m, "P03", "PC3", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC89", 200000m, "P04", "PC3", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC9", 160000m, "P04", "PC2", new DateTime(2025, 7, 27, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC90", 150000m, "P05", "PC3", new DateTime(2025, 7, 31, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC91", 100000m, "P01", "PC1", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC92", 120000m, "P02", "PC1", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC93", 160000m, "P03", "PC1", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) },
+                    { "SC94", 140000m, "P04", "PC1", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 19, 0, 0, 0) },
+                    { "SC95", 200000m, "P05", "PC1", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 20, 30, 0, 0) },
+                    { "SC96", 150000m, "P01", "PC1", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 22, 30, 0, 0) },
+                    { "SC97", 100000m, "P02", "PC2", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 10, 0, 0, 0) },
+                    { "SC98", 120000m, "P03", "PC2", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 13, 0, 0, 0) },
+                    { "SC99", 160000m, "P04", "PC2", new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Local), new TimeSpan(0, 16, 0, 0, 0) }
                 });
 
             migrationBuilder.CreateIndex(
@@ -465,6 +599,14 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Migrations
 
             migrationBuilder.DropColumn(
                 name: "MaNguoiDung",
+                table: "TaiKhoan");
+
+            migrationBuilder.DropColumn(
+                name: "SoLanDangNhapSai",
+                table: "TaiKhoan");
+
+            migrationBuilder.DropColumn(
+                name: "ThoiGianKhoa",
                 table: "TaiKhoan");
         }
     }

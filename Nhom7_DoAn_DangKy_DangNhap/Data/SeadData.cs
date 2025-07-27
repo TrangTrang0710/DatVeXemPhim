@@ -21,20 +21,20 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Data
                 {
                     var gheList = new List<Ghe>();
 
-                    // Phòng Thường – PC01 – LG01
+                    // Phòng Thường – PC1 – LG01
                     for (char row = 'A'; row <= 'H'; row++)
                         for (int seat = 1; seat <= 10; seat++)
-                            gheList.Add(new Ghe { TenGhe = $"{row}{seat}", MaPhongChieu = "PC01", MaLoaiGhe = "LG01" });
+                            gheList.Add(new Ghe { TenGhe = $"{row}{seat}", MaPhongChieu = "PC1", MaLoaiGhe = "LG01" });
 
-                    // Phòng VIP – PC02 – LG02
+                    // Phòng VIP – PC2 – LG02
                     for (char row = 'I'; row <= 'M'; row++)
                         for (int seat = 1; seat <= 8; seat++)
-                            gheList.Add(new Ghe { TenGhe = $"{row}{seat}", MaPhongChieu = "PC02", MaLoaiGhe = "LG02" });
+                            gheList.Add(new Ghe { TenGhe = $"{row}{seat}", MaPhongChieu = "PC2", MaLoaiGhe = "LG02" });
 
-                    // Phòng Couple – PC03 – LG03
+                    // Phòng Couple – PC3 – LG03
                     for (char row = 'N'; row <= 'R'; row++)
                         for (int seat = 1; seat <= 8; seat++)
-                            gheList.Add(new Ghe { TenGhe = $"{row}{seat}", MaPhongChieu = "PC03", MaLoaiGhe = "LG03" });
+                            gheList.Add(new Ghe { TenGhe = $"{row}{seat}", MaPhongChieu = "PC3", MaLoaiGhe = "LG03" });
 
                     context.Ghe.AddRange(gheList);
                     context.SaveChanges();
@@ -71,9 +71,9 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Data
                 {
                     var veList = new List<Ve>
                     {
-                        new Ve { MaVe = "VE01", MaNguoiDung = "ND01", MaSuatChieu = "SC01", TenGhe = "A1", MaPhongChieu = "PC01", NgayDat = new DateTime(2025, 7, 10), TrangThai = "Đã thanh toán" },
-                        new Ve { MaVe = "VE02", MaNguoiDung = "ND02", MaSuatChieu = "SC02", TenGhe = "D5", MaPhongChieu = "PC01", NgayDat = new DateTime(2025, 7, 11), TrangThai = "Đã thanh toán" },
-                        new Ve { MaVe = "VE03", MaNguoiDung = "ND03", MaSuatChieu = "SC03", TenGhe = "I8", MaPhongChieu = "PC02", NgayDat = new DateTime(2025, 7, 12), TrangThai = "Chưa thanh toán" }
+                        new Ve { MaVe = "VE01", MaNguoiDung = "ND01", MaSuatChieu = "SC1", TenGhe = "A1", MaPhongChieu = "PC1", NgayDat = new DateTime(2025, 7, 10), TrangThai = "Đã thanh toán" },
+                        new Ve { MaVe = "VE02", MaNguoiDung = "ND02", MaSuatChieu = "SC2", TenGhe = "D5", MaPhongChieu = "PC1", NgayDat = new DateTime(2025, 7, 11), TrangThai = "Đã thanh toán" },
+                        new Ve { MaVe = "VE03", MaNguoiDung = "ND03", MaSuatChieu = "SC3", TenGhe = "I8", MaPhongChieu = "PC2", NgayDat = new DateTime(2025, 7, 12), TrangThai = "Chưa thanh toán" }
                     };
                     context.Ve.AddRange(veList);
                     context.SaveChanges();

@@ -7,6 +7,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Models
         [Key]
         public string MaLoaiGhe { get; set; } = string.Empty; 
         public string TenLoaiGhe { get; set; } = string.Empty; // Ghế thường, VIP, Couple
+
         public ICollection<Ghe>? Ghes { get; set; }
 
     }

@@ -48,7 +48,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         // GET: NguoiDungs/Create
         public IActionResult Create()
         {
-            ViewData["TenDangNhap"] = new SelectList(_context.TaiKhoan, "TenDangNhap", "TenDangNhap");
+            
             return View();
         }
 
@@ -57,15 +57,27 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaNguoiDung,HoTen,Email,SDT,TenDangNhap")] NguoiDung nguoiDung)
+        public async Task<IActionResult> Create([Bind("HoTen,Email,SDT,TenDangNhap")] NguoiDung nguoiDung)
         {
             if (ModelState.IsValid)
             {
+                var lastUser = await _context.NguoiDung
+                    .OrderByDescending(u => u.MaNguoiDung)
+                    .FirstOrDefaultAsync();
+
+                string newId = "ND01";
+                if (lastUser != null)
+                {
+                    int num = int.Parse(lastUser.MaNguoiDung.Substring(2));
+                    newId = "ND" + (num + 1).ToString("D2");
+                }
+
+                nguoiDung.MaNguoiDung = newId;
+
                 _context.Add(nguoiDung);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaNguoiDung"] = new SelectList(_context.TaiKhoan, "MaNguoiDung", "TenDangNhap", nguoiDung.MaNguoiDung);
             return View(nguoiDung);
         }
 
@@ -219,6 +231,34 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
 
             return RedirectToAction("QLNguoiDung");
         }
+        [HttpPost]
+        public async Task<IActionResult> LichSuVe()
+        {
+            var tenDangNhap = HttpContext.Session.GetString("TenDangNhap");
+            if (tenDangNhap == null)
+            {
+                return RedirectToAction("DangNhap", "TaiKhoan");
+            }
+
+            var taiKhoan = await _context.TaiKhoan
+                .FirstOrDefaultAsync(tk => tk.TenDangNhap == tenDangNhap);
+
+            if (taiKhoan == null)
+            {
+                return NotFound("Không tìm thấy tài khoản.");
+            }
+
+            var veDaDat = await _context.Ve
+                .Include(v => v.Ghe)
+                .Include(v => v.SuatChieu)
+                .ThenInclude(sc => sc!.Phim)
+                .Where(v => v.MaNguoiDung == taiKhoan.MaNguoiDung)
+                .OrderByDescending(v => v.NgayDat)
+                .ToListAsync();
+
+            return View(veDaDat);
+        }
+
 
     }
 }

@@ -1,42 +1,30 @@
 ﻿@model Nhom7_DoAn_DangKy_DangNhap.Models.SuatChieu
-
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Chi Tiết Suất Chiếu";
 }
 
-<h1>Details</h1>
+<h2 class="mb-4 text-info">🔍 Chi Tiết Suất Chiếu</h2>
 
-<div>
-    <h4>SuatChieu</h4>
-    <hr />
+<div class="card p-4 shadow-sm">
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ThoiGianChieu)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ThoiGianChieu)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GiaVe)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GiaVe)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Phim)
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.Phim?.MaPhim)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PhongChieu)
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.PhongChieu?.MaPhongChieu)
-        </dd>
+        <dt class="col-sm-3">🎬 Tên Phim</dt>
+        <dd class="col-sm-9">@Model.Phim?.TenPhim</dd>
+
+        <dt class="col-sm-3">📅 Ngày Chiếu</dt>
+        <dd class="col-sm-9">@Model.NgayChieu.ToString("dd/MM/yyyy")</dd>
+
+        <dt class="col-sm-3">⏰ Giờ Chiếu</dt>
+        <dd class="col-sm-9">@Model.ThoiGianChieu.ToString(@"hh\:mm")</dd>
+
+        <dt class="col-sm-3">🏢 Phòng Chiếu</dt>
+        <dd class="col-sm-9">@Model.PhongChieu?.TenPhong</dd>
+
+        <dt class="col-sm-3">💰 Giá Vé</dt>
+        <dd class="col-sm-9">@Model.GiaVe.ToString("N0") VNĐ</dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.MaSuatChieu">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.MaSuatChieu" class="btn btn-warning">✏️ Chỉnh sửa</a>
+    <a asp-action="Index" class="btn btn-secondary">⬅️ Quay lại</a>
 </div>

@@ -1,49 +1,56 @@
 ﻿@model IEnumerable<Nhom7_DoAn_DangKy_DangNhap.Models.SuatChieu>
-
 @{
     var phim = ViewBag.Phim;
+    var phong = ViewBag.Phong;
 }
 
-@if (phim != null)
-{
-    <h2>Chọn suất chiếu cho @phim.TenPhim</h2>
-}
-else
-{
-    <h2>Danh sách suất chiếu</h2>
-}
-
-<table class="table table-dark table-bordered">
-    <thead>
-        <tr>
-            <th>Ngày chiếu</th>
-            <th>Giờ chiếu</th>
-            <th>Phòng</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (!Model.Any())
-        {
-            <tr>
-                <td colspan="4" class="text-center">Không có suất chiếu nào.</td>
-            </tr>
-        }
-        else
-        {
-            @foreach (var sc in Model)
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h4>
+                🎬 @((phim != null) ? $"Phim: {phim.TenPhim}" : "")
+                <br />
+                🏢 @((phong != null) ? $"Phòng chiếu: {phong.TenPhong}" : "")
+            </h4>
+        </div>
+        <div class="card-body">
+            @if (!Model.Any())
             {
-                <tr>
-                    <td>@sc.NgayChieu.ToString("dd/MM/yyyy")</td>
-                    <td>@sc.ThoiGianChieu.ToString(@"hh\:mm")</td>
-                    <td>@sc.PhongChieu?.TenPhong</td>
-                    <td>
-                        <a asp-controller="DatVe" asp-action="ChonGhe" asp-route-maSuatChieu="@sc.MaSuatChieu" class="btn btn-warning">
-                            Chọn ghế
-                        </a>
-                    </td>
-                </tr>
+                <div class="alert alert-warning text-center">
+                    Không có suất chiếu nào cho phòng này.
+                </div>
             }
-        }
-    </tbody>
-</table>
+            else
+            {
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>📅 Ngày chiếu</th>
+                            <th>🕒 Giờ chiếu</th>
+                            <th>💰 Giá vé</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sc in Model)
+                        {
+                            <tr>
+                                <td>@sc.NgayChieu.ToString("dd/MM/yyyy")</td>
+                                <td>@sc.ThoiGianChieu.ToString(@"hh\:mm")</td>
+                                <td>@string.Format("{0:N0} VNĐ", sc.GiaVe)</td>
+                                <td>
+                                    <a asp-controller="DatVe"
+                                       asp-action="ChonGhe"
+                                       asp-route-maSuatChieu="@sc.MaSuatChieu"
+                                       class="btn btn-warning btn-sm">
+                                        Chọn ghế
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

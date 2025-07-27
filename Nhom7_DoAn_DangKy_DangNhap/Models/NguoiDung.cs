@@ -6,7 +6,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Models
     public class NguoiDung
     {
         [Key]
-        public string MaNguoiDung { get; set; } = Guid.NewGuid().ToString();
+        public string MaNguoiDung { get; set; } = string.Empty;
 
         [Required]
         public string HoTen { get; set; } = string.Empty;

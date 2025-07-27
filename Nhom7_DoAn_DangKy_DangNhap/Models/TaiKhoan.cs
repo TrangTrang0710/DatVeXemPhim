@@ -28,6 +28,9 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Models
         public string MaNguoiDung { get; set; } = string.Empty;
         public NguoiDung? NguoiDung { get; set; }
         public bool IsLocked { get; set; } = false;
+        public int SoLanDangNhapSai { get; set; } = 0;
+        public DateTime? ThoiGianKhoa { get; set; } // thời điểm bắt đầu khóa
+        
     }
 }
 

@@ -96,24 +96,62 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Data
 
             );
             modelBuilder.Entity<LoaiPhong>().HasData(
-                new LoaiPhong { MaLoaiPhong = "Thuong", SoLuongGhe = 80 },
-                new LoaiPhong { MaLoaiPhong = "VIP", SoLuongGhe = 40 },
-                new LoaiPhong { MaLoaiPhong = "Couple", SoLuongGhe = 40 }
+                new LoaiPhong { MaLoaiPhong = "LP01", SoLuongGhe = 80 },
+                new LoaiPhong { MaLoaiPhong = "LP02", SoLuongGhe = 40 },
+                new LoaiPhong { MaLoaiPhong = "LP03", SoLuongGhe = 40 }
             );
             modelBuilder.Entity<PhongChieu>().HasData(
-                new PhongChieu { MaPhongChieu = "PC01", TenPhong = "Phòng 1", MaLoaiPhong = "Thuong" },
-                new PhongChieu { MaPhongChieu = "PC02", TenPhong = "Phòng 2", MaLoaiPhong = "VIP" },
-                new PhongChieu { MaPhongChieu = "PC03", TenPhong = "Phòng 3", MaLoaiPhong = "Couple" }
-
+                new PhongChieu { MaPhongChieu = "PC1", TenPhong = "Phòng 1 (Thường)", MaLoaiPhong = "LP01" },
+                new PhongChieu { MaPhongChieu = "PC2", TenPhong = "Phòng 2 (VIP)", MaLoaiPhong = "LP02" },
+                new PhongChieu { MaPhongChieu = "PC3", TenPhong = "Phòng 3 (Couple)", MaLoaiPhong = "LP03" }
             );
 
-            modelBuilder.Entity<SuatChieu>().HasData(
-                new SuatChieu { MaSuatChieu = "SC01", MaPhim = "P01", MaPhongChieu = "PC01", NgayChieu = DateTime.Today.AddDays(1), ThoiGianChieu = new TimeSpan(19, 0, 0), GiaVe = 120000.00m},
-                new SuatChieu { MaSuatChieu = "SC02", MaPhim = "P02", MaPhongChieu = "PC01", NgayChieu = DateTime.Today.AddDays(2), ThoiGianChieu = new TimeSpan(21, 0, 0), GiaVe = 120000.00m },
-                new SuatChieu { MaSuatChieu = "SC03", MaPhim = "P03", MaPhongChieu = "PC02", NgayChieu = DateTime.Today.AddDays(3), ThoiGianChieu = new TimeSpan(21, 0, 0), GiaVe = 150000.00m },
-                new SuatChieu { MaSuatChieu = "SC04", MaPhim = "P04", MaPhongChieu = "PC03", NgayChieu = DateTime.Today.AddDays(5), ThoiGianChieu = new TimeSpan(20, 30, 0), GiaVe = 200000.00m },
-                new SuatChieu { MaSuatChieu = "SC05", MaPhim = "P06", MaPhongChieu = "PC01", NgayChieu = DateTime.Today.AddDays(7), ThoiGianChieu = new TimeSpan(22, 30, 0), GiaVe = 120000.00m }
-            );
+            var suatChieuList = new List<SuatChieu>();
+            int counter = 1;
+            string[] phongList = { "PC1", "PC2", "PC3" };
+            string[] phimList = { "P01", "P02", "P03", "P04", "P05" };
+            TimeSpan[] khungGio = {
+                new TimeSpan(10, 0, 0),
+                new TimeSpan(13, 0, 0),
+                new TimeSpan(16, 0, 0),
+                new TimeSpan(19, 0, 0),
+                new TimeSpan(20, 30, 0),
+                new TimeSpan(22, 30, 0)
+            };
+
+            decimal[] giaVe = {
+                 100000m, // 10:00
+                 120000m, // 13:00
+                 160000m, // 16:00
+                 140000m, // 19:00
+                 200000m, // 20:30
+                 150000m  // 22:30
+            };
+            for (int day = 1; day <= 7; day++) // 7 ngày tới
+            {
+                foreach (var phong in phongList)
+                {
+                    for (int i = 0; i < khungGio.Length; i++)
+                    {
+                        var maSuat = "SC" + counter.ToString("D1");
+                        var maPhim = phimList[(counter - 1) % phimList.Length];
+
+                        suatChieuList.Add(new SuatChieu
+                        {
+                            MaSuatChieu = maSuat,
+                            MaPhim = maPhim,
+                            MaPhongChieu = phong,
+                            NgayChieu = DateTime.Today.AddDays(day),
+                            ThoiGianChieu = khungGio[i],
+                            GiaVe = giaVe[i]
+                        });
+
+                        counter++;
+                    }
+                }
+            }
+
+            modelBuilder.Entity<SuatChieu>().HasData(suatChieuList);
 
             modelBuilder.Entity<LoaiGhe>().HasData(
                 new LoaiGhe { MaLoaiGhe = "LG01", TenLoaiGhe = "Ghế thường"},

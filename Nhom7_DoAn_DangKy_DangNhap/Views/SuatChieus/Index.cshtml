@@ -1,41 +1,105 @@
-﻿@model IEnumerable<Nhom7_DoAn_DangKy_DangNhap.Models.SuatChieu>
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using Nhom7_DoAn_DangKy_DangNhap.Models
+@model IPagedList<SuatChieu>
 
 @{
     ViewData["Title"] = "Quản Lý Suất Chiếu";
+    var vaiTro = Context.Session.GetString("VaiTro");
+    var roomList = ViewBag.RoomList as List<PhongChieu>;
 }
 
-<h1>Quản Lý Suất Chiếu</h1>
+<h1 class="mb-4">🎬 Quản Lý Suất Chiếu</h1>
 
-<p>
-    <a asp-action="Create">Thêm Suất Chiếu Mới</a>
-</p>
-<table class="table table-bordered table-striped">
-    <thead class="thead-dark">
+<!-- Form lọc -->
+<form method="get" class="mb-3 d-flex gap-2 flex-wrap">
+    <input type="text" name="searchString" class="form-control" placeholder="🔍 Nhập tên phim" value="@ViewBag.SearchString" />
+    <input type="date" name="dateFilter" class="form-control" value="@ViewBag.DateFilter" />
+
+    <select name="roomFilter" class="form-select">
+        <option value="">-- Chọn phòng chiếu --</option>
+        @if (roomList != null)
+        {
+            foreach (var room in roomList)
+            {
+                <option value="@room.MaPhongChieu" selected="ViewBag.RoomList = _context.PhongChieu.ToList();">
+                    @room.TenPhong
+                </option>
+            }
+        }
+    </select>
+
+    <button type="submit" class="btn btn-primary">Lọc</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Xóa lọc</a>
+</form>
+
+<!-- Nút thêm suất chiếu -->
+@if (vaiTro == "Admin" || vaiTro == "NhanVien")
+{
+    <p><a asp-action="Create" class="btn btn-success">+ Thêm Suất Chiếu</a></p>
+}
+
+<!-- Bảng danh sách -->
+<table class="table table-bordered table-hover align-middle">
+    <thead class="table-dark text-center">
         <tr>
-            <th>@Html.DisplayNameFor(model => model.ThoiGianChieu)</th>
-            <th>@Html.DisplayNameFor(model => model.GiaVe)</th>
             <th>Phim</th>
-            <th>Phòng Chiếu</th>
-            <th>Hành động</th>
+            <th>Ngày chiếu</th>
+            <th>Giờ chiếu</th>
+            <th>Phòng chiếu</th>
+            <th>Giá vé</th>
+            @if (vaiTro == "Admin" || vaiTro == "NhanVien")
+            {
+                <th>Hành động</th>
+            }
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @if (!Model.Any())
         {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.ThoiGianChieu)</td>
-                <td>@Html.DisplayFor(modelItem => item.GiaVe)</td>
-                <td>@item.Phim?.MaPhim</td>
-                <td>@item.PhongChieu?.MaPhongChieu</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.MaSuatChieu">✏️ Sửa</a> |
-                    <a asp-action="Details" asp-route-id="@item.MaSuatChieu">🔍 Chi tiết</a> |
-                    <a asp-action="Delete" asp-route-id="@item.MaSuatChieu">🗑️ Xoá</a>
-                </td>
-            </tr>
+            <tr><td colspan="6" class="text-center text-muted">Không có suất chiếu nào.</td></tr>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Phim?.TenPhim</td>
+                    <td class="text-center">@item.NgayChieu.ToString("dd/MM/yyyy")</td>
+                    <td class="text-center">@item.ThoiGianChieu.ToString(@"hh\:mm")</td>
+                    <td class="text-center">@item.PhongChieu?.TenPhong</td>
+                    <td class="text-center">@item.GiaVe.ToString("c0", new System.Globalization.CultureInfo("vi-VN"))</td>
+                    @if (vaiTro == "Admin" || vaiTro == "NhanVien")
+                    {
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@item.MaSuatChieu" class="btn btn-warning btn-sm">✏️ Sửa</a>
+                            <a asp-action="Details" asp-route-id="@item.MaSuatChieu" class="btn btn-info btn-sm">🔍 Xem</a>
+                            <a asp-action="Delete" asp-route-id="@item.MaSuatChieu" class="btn btn-danger btn-sm"
+                               onclick="return confirm('Bạn có chắc muốn xóa suất chiếu này?')">🗑 Xóa</a>
+                        </td>
+                    }
+                </tr>
+            }
         }
     </tbody>
 </table>
+
+<!-- Phân trang -->
+<div class="d-flex justify-content-center mt-3">
+    @Html.PagedListPager(
+        Model,
+        page => Url.Action("Index", new {
+            page,
+            searchString = ViewBag.SearchString,
+            dateFilter = ViewBag.DateFilter,
+            roomFilter = ViewBag.RoomFilter
+        }),
+        PagedListRenderOptions.ClassicPlusFirstAndLast
+    )
+</div>
+
+<!-- Quay về trang chủ -->
 <div class="text-end mt-3">
     <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">🏠 Quay về Trang Chủ</a>
 </div>

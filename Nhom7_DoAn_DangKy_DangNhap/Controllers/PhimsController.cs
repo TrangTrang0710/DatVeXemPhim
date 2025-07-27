@@ -20,11 +20,21 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         }
 
         // GET: Phims
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var nhom7_DoAn_DangKy_DangNhapContext = _context.Phim.Include(p => p.TaiKhoan);
-            return View(await nhom7_DoAn_DangKy_DangNhapContext.ToListAsync());
+            var dsPhim = _context.Phim.Include(p => p.TaiKhoan).AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                var keyword = searchString.ToLower();
+                dsPhim = dsPhim.Where(p => p.TenPhim.ToLower().Contains(keyword)
+                                         || p.TheLoai.ToLower().Contains(keyword));
+            }
+
+            ViewBag.SearchString = searchString; // Giữ lại từ khóa tìm kiếm
+            return View(await dsPhim.ToListAsync());
         }
+
 
         // GET: Phims/Details/5
         public async Task<IActionResult> Details(string id)

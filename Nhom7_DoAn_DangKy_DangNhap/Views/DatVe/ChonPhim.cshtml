@@ -1,0 +1,26 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IEnumerable<Nhom7_DoAn_DangKy_DangNhap.Models.Phim>
+<div class="container mt-4">
+    <h3>🎬 Chọn phim</h3>
+    <div class="row">
+        @foreach (var phim in Model)
+        {
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <img src="~/images/@phim.Anh" class="card-img-top" alt="@phim.TenPhim" style="height:250px;object-fit:cover;">
+                    <div class="card-body text-center">
+                        <h5>@phim.TenPhim</h5>
+                        <a asp-controller="DatVe" asp-action="ChonPhong" asp-route-maPhim="@phim.MaPhim" class="btn btn-success">
+                            Đặt vé
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

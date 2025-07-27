@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IEnumerable<Nhom7_DoAn_DangKy_DangNhap.Models.PhongChieu>
+@{
+    var phim = ViewBag.Phim;
+}
+<div class="container mt-4">
+    <h3>🎬 Chọn phòng chiếu cho phim: @phim.TenPhim</h3>
+    <div class="row">
+        @foreach (var phong in Model)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <h5>@phong.TenPhong</h5>
+                        <p>Loại phòng: @phong.MaLoaiPhong</p>
+                        <a asp-controller="DatVe" asp-action="ChonSuatChieu"
+                           asp-route-maPhim="@phim.MaPhim"
+                           asp-route-maPhong="@phong.MaPhongChieu"
+                           class="btn btn-primary">Chọn phòng</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

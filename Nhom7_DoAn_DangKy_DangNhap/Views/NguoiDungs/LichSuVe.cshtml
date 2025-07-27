@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Nhom7_DoAn_DangKy_DangNhap.Models.Ve>
+
+@{
+    ViewData["Title"] = "Lịch Sử Vé Đã Đặt";
+}
+
+<h2 class="text-center mt-3">LỊCH SỬ VÉ ĐÃ ĐẶT</h2>
+
+<table class="table table-bordered table-striped mt-4">
+    <thead class="table-dark">
+        <tr>
+            <th>Phim</th>
+            <th>Suất chiếu</th>
+            <th>Ghế</th>
+            <th>Ngày đặt</th>
+            <th>Tổng tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.SuatChieu?.Phim?.TenPhim</td>
+                <td>
+                    @item.SuatChieu?.NgayChieu.ToString("dd/MM/yyyy")
+                    -
+                    @item.SuatChieu?.ThoiGianChieu.ToString(@"hh\:mm")
+                </td>
+                <td>@item.Ghe?.TenGhe</td>
+                <td>@item.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@item.SuatChieu?.GiaVe.ToString("N0") VND</td>
+            </tr>
+        }
+    </tbody>
+</table>
