@@ -181,7 +181,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
     <p><strong>Mã OTP của bạn là:</strong></p>
     <div style='font-size: 28px; font-weight: bold; color: #e74c3c; padding: 10px 0;'>{otp}</div>
     <p>Vui lòng nhập mã này vào trang xác nhận để tiếp tục quá trình đặt lại mật khẩu.</p>
-    <p style='color: gray; font-size: 13px;'>Lưu ý: Mã OTP có hiệu lực trong 1 phút kể từ khi gửi.</p>
+    <p style='color: gray; font-size: 13px;'>Lưu ý: Mã OTP có hiệu lực trong 3 phút kể từ khi gửi.</p>
     <hr style='margin: 20px 0;' />
     <p style='font-size: 12px; color: #999;'>Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này hoặc liên hệ với bộ phận hỗ trợ của chúng tôi.</p>
     <p style='font-size: 13px;'>Trân trọng,<br><strong>Hệ thống đặt vé xem phim TX3</strong></p>
@@ -229,7 +229,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 return View();
             }
 
-            if ((DateTime.UtcNow - createdTime.ToUniversalTime()).TotalMinutes > 1)
+            if ((DateTime.UtcNow - createdTime.ToUniversalTime()).TotalMinutes > 3)
             {
                 ViewBag.Error = "❌ Mã OTP đã hết hạn. Vui lòng yêu cầu mã mới.";
                 return View();
@@ -323,7 +323,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 var message = new MailMessage(fromAddress, toAddress)
                 {
                     Subject = "🔄 Mã OTP mới - Rạp phim TX3",
-                    Body = $"<p>Mã OTP mới của bạn là: <strong>{otp}</strong></p><p>Lưu ý: Mã có hiệu lực trong 1 phút.</p>",
+                    Body = $"<p>Mã OTP mới của bạn là: <strong>{otp}</strong></p><p>Lưu ý: Mã có hiệu lực trong 3 phút.</p>",
                     IsBodyHtml = true
                 };
 
