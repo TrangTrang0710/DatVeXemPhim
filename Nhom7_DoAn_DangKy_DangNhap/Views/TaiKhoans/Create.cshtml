@@ -7,7 +7,7 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <div class="card shadow rounded-4">
                 <div class="card-header bg-primary text-white text-center rounded-top-4">
                     <h3 class="mb-0">Tạo tài khoản</h3>
@@ -16,49 +16,67 @@
                     <form asp-action="Create">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                        <div class="mb-3">
-                            <label asp-for="TenDangNhap" class="form-label fw-bold"></label>
-                            <input asp-for="TenDangNhap" class="form-control" placeholder="Nhập tên đăng nhập" />
-                            <span asp-validation-for="TenDangNhap" class="text-danger"></span>
+                        <div class="row">
+                            <!-- THÔNG TIN TÀI KHOẢN -->
+                            <div class="col-md-6">
+                                <h5 class="fw-bold mb-3 text-primary">Thông tin tài khoản</h5>
+
+                                <div class="mb-3">
+                                    <label asp-for="TenDangNhap" class="form-label fw-bold"></label>
+                                    <input asp-for="TenDangNhap" class="form-control" placeholder="Nhập tên đăng nhập" />
+                                    <span asp-validation-for="TenDangNhap" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="MatKhau" class="form-label fw-bold"></label>
+                                    <input asp-for="MatKhau" class="form-control" placeholder="Nhập mật khẩu" type="password" />
+                                    <span asp-validation-for="MatKhau" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="VaiTro" class="form-label fw-bold"></label>
+                                    <select asp-for="VaiTro" class="form-select">
+                                        <option value="">-- Chọn vai trò --</option>
+                                        <option value="Admin">Admin</option>
+                                        <option value="NhanVien">Nhân viên</option>
+                                        <option value="KhachHang">Khách hàng</option> <!-- Sửa ở đây -->
+                                    </select>
+                                    <span asp-validation-for="VaiTro" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="TrangThaiTK" class="form-label fw-bold"></label>
+                                    <select asp-for="TrangThaiTK" class="form-select">
+                                        <option value="">-- Chọn trạng thái --</option>
+                                        <option value="Hoạt động">Hoạt động</option>
+                                        <option value="Đã khóa">Đã khóa</option>
+                                    </select>
+                                    <span asp-validation-for="TrangThaiTK" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <!-- THÔNG TIN NGƯỜI DÙNG -->
+                            <div class="col-md-6">
+                                <h5 class="fw-bold mb-3 text-primary">Thông tin người dùng</h5>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Họ tên</label>
+                                    <input name="HoTen" class="form-control" placeholder="Nhập họ tên" required />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Email</label>
+                                    <input name="Email" class="form-control" placeholder="Nhập email" type="email" required />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Số điện thoại</label>
+                                    <input name="SDT" class="form-control" placeholder="Nhập số điện thoại" required />
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label asp-for="MatKhau" class="form-label fw-bold"></label>
-                            <input asp-for="MatKhau" class="form-control" placeholder="Nhập mật khẩu" type="password" />
-                            <span asp-validation-for="MatKhau" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="VaiTro" class="form-label fw-bold"></label>
-                            <select asp-for="VaiTro" class="form-select">
-                                <option value="">-- Chọn vai trò --</option>
-                                <option value="Admin">Admin</option>
-                                <option value="NhanVien">Nhân viên</option>
-                                <option value="User">Khách hàng</option>
-                            </select>
-                            <span asp-validation-for="VaiTro" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="TrangThaiTK" class="form-label fw-bold"></label>
-                            <select asp-for="TrangThaiTK" class="form-select">
-                                <option value="">-- Chọn trạng thái --</option>
-                                <option value="Hoạt động">Hoạt động</option>
-                                <option value="Đã khóa">Đã khóa</option>
-                            </select>
-                            <span asp-validation-for="TrangThaiTK" class="text-danger"></span>
-                        </div>
-
-                        <!-- NEW: Dropdown chọn người dùng -->
-                        <div class="mb-3">
-                            <label asp-for="MaNguoiDung" class="form-label fw-bold">Người dùng</label>
-                            <select asp-for="MaNguoiDung" class="form-select" asp-items="ViewBag.MaNguoiDung">
-                                <option value="">-- Chọn người dùng --</option>
-                            </select>
-                            <span asp-validation-for="MaNguoiDung" class="text-danger"></span>
-                        </div>
-
-                        <div class="d-grid">
+                        <div class="d-grid mt-3">
                             <button type="submit" class="btn btn-success btn-block">Tạo tài khoản</button>
                         </div>
                     </form>

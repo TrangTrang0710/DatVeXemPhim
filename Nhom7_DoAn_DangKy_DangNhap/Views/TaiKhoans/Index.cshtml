@@ -3,7 +3,11 @@
 @{
     ViewData["Title"] = "Quản lý tài khoản";
     Layout = "~/Views/Shared/Layout.cshtml";
-    var hasData = Model != null && Model.Any();
+
+    var currentSearch = Context.Request.Query["searchString"];
+    var currentVaiTro = Context.Request.Query["vaiTro"];
+    var currentTrangThai = Context.Request.Query["trangThai"];
+    var currentSortOrder = Context.Request.Query["sortOrder"];
 }
 
 <div class="container mt-4">
@@ -12,7 +16,47 @@
         <a asp-action="Create" class="btn btn-primary">+ Thêm tài khoản</a>
     </div>
 
-    @if (hasData)
+    <!-- Bộ lọc + tìm kiếm -->
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-md-3">
+            <label class="form-label fw-bold">🔍 Tìm tên đăng nhập</label>
+            <input type="text" name="searchString" value="@currentSearch" class="form-control" placeholder="Nhập tên đăng nhập..." />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Sắp xếp theo tên</label>
+            <select name="sortOrder" class="form-select">
+                <option value="">-- Mặc định --</option>
+                <option value="name_asc" selected="@(currentSortOrder == "name_asc")">A → Z</option>
+                <option value="name_desc" selected="@(currentSortOrder == "name_desc")">Z → A</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Vai trò</label>
+            <select name="vaiTro" class="form-select">
+                <option value="">-- Tất cả --</option>
+                <option value="Admin" selected="@(currentVaiTro == "Admin")">Admin</option>
+                <option value="NhanVien" selected="@(currentVaiTro == "NhanVien")">Nhân viên</option>
+                <option value="KhachHang" selected="@(currentVaiTro == "KhachHang")">Khách hàng</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Trạng thái</label>
+            <select name="trangThai" class="form-select">
+                <option value="">-- Tất cả --</option>
+                <option value="Hoạt động" selected="@(currentTrangThai == "Hoạt động")">Hoạt động</option>
+                <option value="Đã khóa" selected="@(currentTrangThai == "Đã khóa")">Đã khóa</option>
+            </select>
+        </div>
+
+        <div class="col-md-12 d-flex justify-content-end">
+            <button type="submit" class="btn btn-outline-primary">🔍 Lọc & Tìm kiếm</button>
+        </div>
+    </form>
+
+    @if (Model != null && Model.Any())
     {
         <table class="table table-hover table-bordered shadow-sm">
             <thead class="table-dark">
@@ -27,29 +71,14 @@
             <tbody>
                 @foreach (var item in Model)
                 {
+                    string badge = item.TrangThaiTK?.Trim().ToLower() == "hoạt động" ? "bg-success" : "bg-secondary";
+                    string hienThi = item.TrangThaiTK?.Trim().ToLower() == "hoạt động" ? "Đang hoạt động" : "Đã khóa";
+
                     <tr>
                         <td>@item.TenDangNhap</td>
                         <td>@(new string('*', item.MatKhau.Length))</td>
                         <td>@item.VaiTro</td>
-                        <td>
-                            @{
-                                var trangThai = item.TrangThaiTK?.Trim().ToLower();
-                                string hienThi = "Không rõ";
-                                string badge = "bg-warning";
-
-                                if (trangThai == "1" || trangThai == "hoạt động" || trangThai == "true")
-                                {
-                                    hienThi = "Đang hoạt động";
-                                    badge = "bg-success";
-                                }
-                                else if (trangThai == "0" || trangThai == "đã khóa" || trangThai == "false")
-                                {
-                                    hienThi = "Đã khóa";
-                                    badge = "bg-secondary";
-                                }
-                            }
-                            <span class="badge @badge">@hienThi</span>
-                        </td>
+                        <td><span class="badge @badge">@hienThi</span></td>
                         <td>
                             <a asp-action="Edit" asp-route-id="@item.TenDangNhap" class="btn btn-sm btn-warning me-1">Sửa</a>
                             <a asp-action="Details" asp-route-id="@item.TenDangNhap" class="btn btn-sm btn-info me-1">Chi tiết</a>
@@ -62,10 +91,10 @@
     }
     else
     {
-        <div class="alert alert-info">Hiện chưa có tài khoản nào.</div>
+        <div class="alert alert-info">Không có tài khoản nào phù hợp.</div>
     }
-</div>
 
-<div class="text-end mt-3">
-    <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">🏠 Quay về Trang Chủ</a>
+    <div class="text-end mt-3">
+        <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">🏠 Quay về Trang Chủ</a>
+    </div>
 </div>

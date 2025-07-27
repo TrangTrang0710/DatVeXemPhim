@@ -10,6 +10,7 @@ using Nhom7_DoAn_DangKy_DangNhap.Models;
 
 namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
 {
+    
     public class TaiKhoansController : AuthController
     {
         private readonly Nhom7_DoAn_DangKy_DangNhapContext _context;
@@ -19,45 +20,98 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
             _context = context;
         }
 
+        // Hàm tạo mã người dùng theo vai trò: ADxxxx, NVxxxx, KHxxxx
+        private string GenerateMaNguoiDungTheoVaiTro(string vaiTro)
+        {
+            string prefix = "KH"; // Mặc định là Khách hàng
+
+            if (!string.IsNullOrEmpty(vaiTro))
+            {
+                switch (vaiTro.Trim().ToLower())
+                {
+                    case "admin":
+                        prefix = "AD";
+                        break;
+                    case "nhân viên":
+                    case "nhan vien":
+                        prefix = "NV";
+                        break;
+                }
+            }
+
+            int count = 1;
+            string maND;
+            do
+            {
+                maND = prefix + count.ToString("D4");
+                count++;
+            } while (_context.NguoiDung.Any(nd => nd.MaNguoiDung == maND));
+
+            return maND;
+        }
+
         // GET: TaiKhoans
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? sortOrder, string? vaiTro, string? trangThai, string? searchString)
         {
-            var danhSachTaiKhoan = await _context.TaiKhoan.ToListAsync();
-            return View(danhSachTaiKhoan);
+            var taiKhoans = _context.TaiKhoan.AsQueryable();
+
+            // Tìm kiếm theo tên đăng nhập
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                taiKhoans = taiKhoans.Where(tk => tk.TenDangNhap.Contains(searchString));
+            }
+
+            // Lọc theo vai trò
+            if (!string.IsNullOrEmpty(vaiTro))
+            {
+                taiKhoans = taiKhoans.Where(tk => tk.VaiTro == vaiTro);
+            }
+
+            // Lọc theo trạng thái
+            if (!string.IsNullOrEmpty(trangThai))
+            {
+                taiKhoans = taiKhoans.Where(tk => tk.TrangThaiTK == trangThai);
+            }
+
+            // Sắp xếp
+            switch (sortOrder)
+            {
+                case "name_asc":
+                    taiKhoans = taiKhoans.OrderBy(tk => tk.TenDangNhap);
+                    break;
+                case "name_desc":
+                    taiKhoans = taiKhoans.OrderByDescending(tk => tk.TenDangNhap);
+                    break;
+            }
+
+            return View(await taiKhoans.ToListAsync());
         }
 
-        // GET: TaiKhoans/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-                return NotFound();
-
-            var taiKhoan = await _context.TaiKhoan
-                .FirstOrDefaultAsync(m => m.TenDangNhap == id);
-
-            if (taiKhoan == null)
-                return NotFound();
-
-            return View(taiKhoan);
-        }
 
         // GET: TaiKhoans/Create
         public IActionResult Create()
         {
-           
-            ViewBag.MaNguoiDung = new SelectList(_context.NguoiDung, "MaNguoiDung", "HoTen");
             return View();
-            
         }
 
         // POST: TaiKhoans/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TenDangNhap,MatKhau,VaiTro,TrangThaiTK,MaNguoiDung")] TaiKhoan taiKhoan)
+        public async Task<IActionResult> Create(
+            [Bind("TenDangNhap,MatKhau,VaiTro,TrangThaiTK")] TaiKhoan taiKhoan,
+            [Bind("HoTen,Email,SDT")] NguoiDung nguoiDung)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(taiKhoan);
+                // Tạo mã người dùng theo vai trò
+                string maNguoiDung = GenerateMaNguoiDungTheoVaiTro(taiKhoan.VaiTro);
+                nguoiDung.MaNguoiDung = maNguoiDung;
+
+                taiKhoan.MaNguoiDung = maNguoiDung;
+
+                _context.NguoiDung.Add(nguoiDung);
+                _context.TaiKhoan.Add(taiKhoan);
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -84,38 +138,34 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("TenDangNhap,MatKhau,VaiTro,TrangThaiTK,MaNguoiDung")] TaiKhoan taiKhoan)
         {
-            if (id != taiKhoan.TenDangNhap)
-                return NotFound();
+           
+                if (id != taiKhoan.TenDangNhap)
+                    return NotFound();
 
-            if (ModelState.IsValid)
-            {
-                try
+                var taiKhoanCu = await _context.TaiKhoan.FindAsync(id);
+                if (taiKhoanCu == null)
+                    return NotFound();
+
+                if (ModelState.IsValid)
                 {
-                    var taiKhoanCu = await _context.TaiKhoan.FindAsync(id);
-                    if (taiKhoanCu == null)
-                        return NotFound();
-
-                    // Cập nhật các thuộc tính cho phép chỉnh sửa
-                    taiKhoanCu.MatKhau = taiKhoan.MatKhau;
                     taiKhoanCu.VaiTro = taiKhoan.VaiTro;
                     taiKhoanCu.TrangThaiTK = taiKhoan.TrangThaiTK;
                     taiKhoanCu.MaNguoiDung = taiKhoan.MaNguoiDung;
 
+                    // Chỉ cập nhật mật khẩu nếu người dùng nhập mới
+                    if (!string.IsNullOrEmpty(taiKhoan.MatKhau))
+                        taiKhoanCu.MatKhau = taiKhoan.MatKhau;
+
+                    _context.Update(taiKhoanCu);
                     await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TaiKhoanExists(taiKhoan.TenDangNhap))
-                        return NotFound();
-                    else
-                        throw;
+
+                    return RedirectToAction(nameof(Index));
                 }
 
-                return RedirectToAction(nameof(Index));
+                ViewBag.MaNguoiDung = new SelectList(_context.NguoiDung, "MaNguoiDung", "HoTen", taiKhoan.MaNguoiDung);
+                return View(taiKhoan);
             }
 
-            return View(taiKhoan);
-        }
 
         // GET: TaiKhoans/Delete/5
         public async Task<IActionResult> Delete(string id)
@@ -123,7 +173,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
             if (string.IsNullOrEmpty(id))
                 return NotFound();
 
-            var taiKhoan = await _context.TaiKhoan
+            var taiKhoan = await _context.TaiKhoan.Include(t => t.NguoiDung)
                 .FirstOrDefaultAsync(m => m.TenDangNhap == id);
 
             if (taiKhoan == null)
@@ -150,6 +200,23 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
         private bool TaiKhoanExists(string id)
         {
             return _context.TaiKhoan.Any(e => e.TenDangNhap == id);
-        }       
+        }
+        // GET: TaiKhoans/Details/5
+        public async Task<IActionResult> Details(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return NotFound();
+
+            var taiKhoan = await _context.TaiKhoan
+                .Include(t => t.NguoiDung)
+                .FirstOrDefaultAsync(m => m.TenDangNhap == id);
+
+            if (taiKhoan == null)
+                return NotFound();
+
+            return View(taiKhoan);
+        }
+
     }
+
 }
