@@ -7,6 +7,7 @@
 
 <div class="row justify-content-center">
     <div class="col-md-4 col-sm-6 col-10">
+        <!-- Form xác nhận OTP -->
         <form asp-action="VerifyOTP" method="post" class="border rounded p-4 shadow-sm bg-light">
             <div class="mb-3">
                 <label for="otp" class="form-label fw-semibold">Nhập mã OTP:</label>
@@ -16,11 +17,25 @@
             <button type="submit" class="btn btn-success w-100 mt-2">Xác nhận</button>
         </form>
 
+        <!-- Thông báo lỗi nếu có -->
         @if (ViewBag.Error != null)
         {
             <div class="alert alert-danger mt-3" role="alert">
                 @ViewBag.Error
             </div>
         }
+
+        <!-- Thông báo từ TempData nếu có -->
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-info mt-3" role="alert">
+                @TempData["Message"]
+            </div>
+        }
+
+        <!-- Nút gửi lại mã OTP -->
+        <form asp-action="ResendOTP" method="post" class="mt-3 text-center">
+            <button type="submit" class="btn btn-link">📩 Gửi lại mã OTP</button>
+        </form>
     </div>
 </div>

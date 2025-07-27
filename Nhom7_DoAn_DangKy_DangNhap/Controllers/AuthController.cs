@@ -13,7 +13,6 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
     {
         private readonly Nhom7_DoAn_DangKy_DangNhapContext _context;
 
-        // Khai báo tên khóa session để lưu OTP và email
         private const string SessionOtpCode = "_OtpCode";
         private const string SessionEmailTemp = "_EmailTemp";
 
@@ -72,7 +71,6 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 ViewBag.ThongBao = TempData["ThongBao"];
             return View();
         }
-        
 
         [HttpPost]
         public IActionResult DangNhap(string tenDangNhap, string matKhau)
@@ -83,7 +81,6 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 return View();
             }
 
-            // Đăng nhập admin tạm thời
             if (tenDangNhap == "admin" && matKhau == "1234")
             {
                 HttpContext.Session.SetString("VaiTro", "Admin");
@@ -119,33 +116,48 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
 
         // ====================== QUÊN MẬT KHẨU ======================
 
-
-        // Bước 1: Hiển thị form nhập email
         [HttpGet]
-        public IActionResult ForgotPassword()
+        public IActionResult ForgotPassword(string? tenDangNhap)
         {
-            return View(new ForgotPasswordViewModel());
+            if (string.IsNullOrEmpty(tenDangNhap))
+            {
+                TempData["Message"] = "⚠️ Bạn cần nhập tên đăng nhập trước khi yêu cầu quên mật khẩu.";
+                return RedirectToAction("DangNhap");
+            }
+
+            var model = new ForgotPasswordViewModel
+            {
+                TenDangNhap = tenDangNhap
+            };
+
+            return View(model);
         }
 
-        // Bước 1: Gửi email OTP
         [HttpPost]
         public IActionResult ForgotPassword(ForgotPasswordViewModel model)
         {
-            if (!ModelState.IsValid) return View("~/Views/Auth/ForgotPassword.cshtml", model);
+            if (!ModelState.IsValid)
+                return View(model);
 
-            var nguoiDung = _context.NguoiDung
-                .Include(nd => nd.TaiKhoan)
-                .FirstOrDefault(nd => nd.Email == model.Email);
+            var taiKhoan = _context.TaiKhoan
+                .Include(t => t.NguoiDung)
+                .FirstOrDefault(t =>
+                    t.TenDangNhap == model.TenDangNhap &&
+                    t.NguoiDung.Email == model.Email &&
+                    t.TrangThaiTK != "Đã khóa");
 
-            if (nguoiDung == null || nguoiDung.TaiKhoan == null)
+            if (taiKhoan == null)
             {
-                ModelState.AddModelError("", "Email không tồn tại.");
+                ModelState.AddModelError("", "❌ Email không khớp với tài khoản hoặc tài khoản không tồn tại.");
                 return View(model);
             }
 
             var otp = new Random().Next(100000, 999999).ToString();
+
             HttpContext.Session.SetString(SessionOtpCode, otp);
             HttpContext.Session.SetString(SessionEmailTemp, model.Email);
+            HttpContext.Session.SetString("OtpCreatedTime", DateTime.Now.ToString("o"));
+            HttpContext.Session.SetString("TenDangNhapTemp", model.TenDangNhap); // dùng lại nếu cần
 
             try
             {
@@ -162,18 +174,18 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 var subject = "🔐 Mã xác nhận đặt lại mật khẩu - Rạp phim TX3";
 
                 var body = $@"
-        <div style='font-family: Arial, sans-serif; padding: 20px; color: #333; background-color: #f9f9f9; border-radius: 10px;'>
-            <h2 style='color: #2c3e50;'>🎬 Rạp phim TX3</h2>
-            <p>Xin chào,</p>
-            <p>Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn.</p>
-            <p><strong>Mã OTP của bạn là:</strong></p>
-            <div style='font-size: 28px; font-weight: bold; color: #e74c3c; padding: 10px 0;'>{otp}</div>
-            <p>Vui lòng nhập mã này vào trang xác nhận để tiếp tục quá trình đặt lại mật khẩu.</p>
-            <p style='color: gray; font-size: 13px;'>Lưu ý: Mã OTP có hiệu lực trong 5 phút kể từ khi gửi.</p>
-            <hr style='margin: 20px 0;' />
-            <p style='font-size: 12px; color: #999;'>Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này hoặc liên hệ với bộ phận hỗ trợ của chúng tôi.</p>
-            <p style='font-size: 13px;'>Trân trọng,<br><strong>Hệ thống đặt vé xem phim TX3</strong></p>
-        </div>";
+<div style='font-family: Arial, sans-serif; padding: 20px; color: #333; background-color: #f9f9f9; border-radius: 10px;'>
+    <h2 style='color: #2c3e50;'>🎬 Rạp phim TX3</h2>
+    <p>Xin chào <strong>{taiKhoan.NguoiDung.HoTen}</strong>,</p>
+    <p>Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản <strong>{taiKhoan.TenDangNhap}</strong>.</p>
+    <p><strong>Mã OTP của bạn là:</strong></p>
+    <div style='font-size: 28px; font-weight: bold; color: #e74c3c; padding: 10px 0;'>{otp}</div>
+    <p>Vui lòng nhập mã này vào trang xác nhận để tiếp tục quá trình đặt lại mật khẩu.</p>
+    <p style='color: gray; font-size: 13px;'>Lưu ý: Mã OTP có hiệu lực trong 1 phút kể từ khi gửi.</p>
+    <hr style='margin: 20px 0;' />
+    <p style='font-size: 12px; color: #999;'>Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này hoặc liên hệ với bộ phận hỗ trợ của chúng tôi.</p>
+    <p style='font-size: 13px;'>Trân trọng,<br><strong>Hệ thống đặt vé xem phim TX3</strong></p>
+</div>";
 
                 var message = new MailMessage(fromAddress, toAddress)
                 {
@@ -209,6 +221,20 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
                 return View();
             }
 
+            var createdTimeStr = HttpContext.Session.GetString("OtpCreatedTime");
+
+            if (!DateTime.TryParse(createdTimeStr, null, System.Globalization.DateTimeStyles.RoundtripKind, out var createdTime))
+            {
+                ViewBag.Error = "❌ Lỗi thời gian phiên OTP.";
+                return View();
+            }
+
+            if ((DateTime.UtcNow - createdTime.ToUniversalTime()).TotalMinutes > 1)
+            {
+                ViewBag.Error = "❌ Mã OTP đã hết hạn. Vui lòng yêu cầu mã mới.";
+                return View();
+            }
+
             var otpInSession = HttpContext.Session.GetString(SessionOtpCode);
             if (otp == otpInSession)
             {
@@ -218,6 +244,7 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
             ViewBag.Error = "❌ Mã OTP không đúng!";
             return View();
         }
+
         [HttpGet]
         public IActionResult ResetPassword()
         {
@@ -256,6 +283,61 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
             return RedirectToAction("DangNhap");
         }
 
+        [HttpPost]
+        public IActionResult ResendOTP()
+        {
+            var email = HttpContext.Session.GetString(SessionEmailTemp);
+
+            if (string.IsNullOrEmpty(email))
+            {
+                TempData["Message"] = "❗ Phiên làm việc đã hết. Vui lòng nhập lại email.";
+                return RedirectToAction("ForgotPassword");
+            }
+
+            var taiKhoan = _context.TaiKhoan
+                .Include(t => t.NguoiDung)
+                .FirstOrDefault(t => t.NguoiDung.Email == email);
+
+            if (taiKhoan == null)
+            {
+                TempData["Message"] = "❌ Không tìm thấy người dùng tương ứng.";
+                return RedirectToAction("ForgotPassword");
+            }
+
+            var otp = new Random().Next(100000, 999999).ToString();
+            HttpContext.Session.SetString(SessionOtpCode, otp);
+            HttpContext.Session.SetString("OtpCreatedTime", DateTime.Now.ToString("o"));
+
+            try
+            {
+                var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential("anikachross@gmail.com", "xtfm qdmd cvlg rwaf"),
+                    EnableSsl = true
+                };
+
+                var fromAddress = new MailAddress("anikachross@gmail.com", "Hệ thống đặt vé TX3");
+                var toAddress = new MailAddress(email);
+
+                var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = "🔄 Mã OTP mới - Rạp phim TX3",
+                    Body = $"<p>Mã OTP mới của bạn là: <strong>{otp}</strong></p><p>Lưu ý: Mã có hiệu lực trong 1 phút.</p>",
+                    IsBodyHtml = true
+                };
+
+                smtpClient.Send(message);
+
+                TempData["Message"] = "✅ Mã OTP mới đã được gửi đến email.";
+                return RedirectToAction("VerifyOTP");
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = "⚠️ Lỗi khi gửi lại mã: " + ex.Message;
+                return RedirectToAction("ForgotPassword");
+            }
+        }
     }
 }
 

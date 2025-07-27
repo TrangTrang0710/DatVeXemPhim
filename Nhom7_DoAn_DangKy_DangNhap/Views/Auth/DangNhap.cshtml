@@ -23,9 +23,8 @@
         <div class="d-grid">
             <button type="submit" class="btn btn-primary">Đăng Nhập</button>
             <div class="mb-3 text-end">
-                <a asp-controller="Auth" asp-action="ForgotPassword">Quên mật khẩu?</a>
+                <a href="javascript:void(0);" onclick="redirectToForgotPassword()">Quên mật khẩu?</a>
             </div>
-
         </div>
 
         @if (ViewBag.ThongBao != null)
@@ -47,4 +46,19 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        function redirectToForgotPassword() {
+            const input = document.querySelector('[name="TenDangNhap"]');
+            const tenDangNhap = input ? input.value.trim() : "";
+
+            if (!tenDangNhap) {
+                alert("⚠️ Vui lòng nhập tên đăng nhập trước khi yêu cầu quên mật khẩu.");
+                return;
+            }
+
+            // Điều hướng sang ForgotPassword kèm tên đăng nhập
+            window.location.href = `/Auth/ForgotPassword?tenDangNhap=${encodeURIComponent(tenDangNhap)}`;
+        }
+    </script>
 }
+
