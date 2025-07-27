@@ -162,6 +162,50 @@ namespace Nhom7_DoAn_DangKy_DangNhap.Controllers
             return _context.NguoiDung.Any(e => e.MaNguoiDung == id);
         }
 
-       
+        // GET: NguoiDungs/ThongTinDangNhap
+   
+        public async Task<IActionResult> ThongTinDangNhap()
+        {
+            string tenDangNhap = HttpContext.Session.GetString("TenDangNhap");
+            if (string.IsNullOrEmpty(tenDangNhap))
+                return RedirectToAction("DangNhap", "Auth");
+
+            var nguoiDung = await _context.NguoiDung
+                .Include(nd => nd.TaiKhoan)
+                .FirstOrDefaultAsync(nd => nd.TaiKhoan.TenDangNhap == tenDangNhap);
+
+            if (nguoiDung == null)
+                return NotFound();
+
+            return View(nguoiDung);
+        }
+
+        // POST: NguoiDungs/ThongTinDangNhap
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ThongTinDangNhap([Bind("HoTen,Email,SDT")] NguoiDung updated)
+        {
+            // Lấy tên đăng nhập từ session
+            string tenDangNhap = HttpContext.Session.GetString("TenDangNhap");
+            if (string.IsNullOrEmpty(tenDangNhap)) return RedirectToAction("DangNhap", "Auth");
+
+            var nguoiDung = await _context.NguoiDung
+                .Include(nd => nd.TaiKhoan)
+                .FirstOrDefaultAsync(nd => nd.TaiKhoan.TenDangNhap == tenDangNhap);
+
+            if (nguoiDung == null) return NotFound();
+
+            // Cập nhật thông tin cá nhân
+            nguoiDung.HoTen = updated.HoTen;
+            nguoiDung.Email = updated.Email;
+            nguoiDung.SDT = updated.SDT;
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Cập nhật thành công!";
+            return RedirectToAction("Index", "Home"); // về trang chủ
+        }
+
     }
 }

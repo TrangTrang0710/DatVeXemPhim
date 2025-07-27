@@ -3,6 +3,7 @@
     Layout = null;
     var username = Context.Session.GetString("TenDangNhap");
     var vaitro = Context.Session.GetString("VaiTro");
+    
 }
 
 <!DOCTYPE html>
@@ -92,17 +93,48 @@
                     }
                 </ul>
 
-                <!-- Người dùng -->
-                @if (!string.IsNullOrEmpty(username))
+
+
+
+                @if (!string.IsNullOrEmpty(username) && vaitro?.ToLower() != "admin")
                 {
-                    <span class="me-3">👋 Xin chào <strong>@username</strong></span>
-                    <a class="btn btn-outline-danger" asp-controller="Auth" asp-action="DangXuat">Đăng xuất</a>
+                    <div class="dropdown">
+                        <button class="btn btn-success dropdown-toggle px-4 fw-bold d-flex align-items-center gap-2"
+                                type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            👋 <span class="fw-bold text-white">Xin chào @username</span>
+                        </button>
+                        <ul class="dropdown-menu w-100 mt-1 shadow" aria-labelledby="userDropdown" style="min-width: 100%;">
+                            <li>
+                                <a class="dropdown-item" asp-controller="NguoiDungs" asp-action="ThongTinDangNhap">
+                                    📄 Thông tin đăng nhập
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <a class="dropdown-item text-danger fw-semibold" asp-controller="Auth" asp-action="DangXuat">
+                                    🚪 Đăng xuất
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(username))
+                {
+                    <!-- Admin: chỉ hiển thị lời chào và nút Đăng xuất -->
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="text-success fw-bold">
+                            👑 Xin chào <span class="text-dark">@username</span>
+                        </div>
+                        <a class="btn btn-danger px-3 fw-bold" asp-controller="Auth" asp-action="DangXuat">Đăng xuất</a>
+                    </div>
                 }
                 else
                 {
-                    <a class="btn btn-success me-2 px-3" asp-controller="Auth" asp-action="DangNhap">Đăng nhập</a>
-                    <a class="btn btn-success px-3" asp-controller="Auth" asp-action="DangKy">Đăng ký</a>
+                    <a class="btn btn-success me-2 px-3 fw-semibold" asp-controller="Auth" asp-action="DangNhap">Đăng nhập</a>
+                    <a class="btn btn-success px-3 fw-semibold" asp-controller="Auth" asp-action="DangKy">Đăng ký</a>
                 }
+
+
             </div>
         </div>
     </nav>
@@ -164,6 +196,8 @@
             </div>
         </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
